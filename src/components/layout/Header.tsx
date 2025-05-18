@@ -1,0 +1,195 @@
+"use client"
+
+import type React from "react"
+import { useState, useEffect } from "react"
+import { Link, useLocation } from "react-router-dom"
+import { Moon, Sun, Menu, User, X } from "lucide-react"
+import { ENV } from "../../config/env"
+
+interface HeaderProps {
+  darkMode: boolean
+  toggleDarkMode: () => void
+}
+
+const Header: React.FC<HeaderProps> = ({ darkMode, toggleDarkMode }) => {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const location = useLocation()
+
+  // إغلاق القائمة المتنقلة عند تغيير المسار
+  useEffect(() => {
+    setMobileMenuOpen(false)
+  }, [location])
+
+  // إغلاق القائمة المتنقلة عند النقر خارجها
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement
+      if (mobileMenuOpen && !target.closest(".mobile-menu") && !target.closest(".mobile-menu-btn")) {
+        setMobileMenuOpen(false)
+      }
+    }
+
+    document.addEventListener("click", handleClickOutside)
+    return () => {
+      document.removeEventListener("click", handleClickOutside)
+    }
+  }, [mobileMenuOpen])
+
+  return (
+    <header className="header bg-background-light border-b border-background-lighter py-4 px-6 sticky top-0 z-50">
+      <div className="container mx-auto">
+        <div className="flex items-center justify-between">
+          <div className="logo-container flex items-center">
+            <Link to="/" className="logo flex items-center gap-3 text-2xl font-bold text-primary">
+              <img
+                src={`${ENV.BASE_URL}assets/logo-wolf.png`}
+                alt="CyberAI OS Logo"
+                className="w-10 h-10 object-contain"
+              />
+              <span>CyberAI OS</span>
+            </Link>
+          </div>
+
+          <nav className="main-nav hidden md:flex">
+            <ul className="flex gap-6">
+              <li>
+                <Link
+                  to="/"
+                  className={`nav-link hover:text-primary transition-colors ${location.pathname === "/" ? "text-primary font-medium" : ""}`}
+                >
+                  الرئيسية
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/chat"
+                  className={`nav-link hover:text-primary transition-colors ${location.pathname === "/chat" ? "text-primary font-medium" : ""}`}
+                >
+                  الدردشة
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/models"
+                  className={`nav-link hover:text-primary transition-colors ${location.pathname === "/models" ? "text-primary font-medium" : ""}`}
+                >
+                  النماذج
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/training"
+                  className={`nav-link hover:text-primary transition-colors ${location.pathname === "/training" ? "text-primary font-medium" : ""}`}
+                >
+                  التدريب
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/terminal"
+                  className={`nav-link hover:text-primary transition-colors ${location.pathname === "/terminal" ? "text-primary font-medium" : ""}`}
+                >
+                  Terminal
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/setup"
+                  className={`nav-link hover:text-primary transition-colors ${location.pathname === "/setup" ? "text-primary font-medium" : ""}`}
+                >
+                  الإعداد
+                </Link>
+              </li>
+            </ul>
+          </nav>
+
+          <div className="header-actions flex items-center gap-4">
+            <button
+              className="theme-toggle-btn bg-none border-none text-muted hover:text-foreground transition-colors"
+              onClick={toggleDarkMode}
+              aria-label={darkMode ? "تفعيل الوضع الفاتح" : "تفعيل الوضع المظلم"}
+            >
+              {darkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+            </button>
+
+            <div className="user-menu relative">
+              <button className="user-menu-btn bg-none border-none flex items-center gap-2" aria-label="قائمة المستخدم">
+                <div className="user-avatar w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center">
+                  <User className="h-4 w-4" />
+                </div>
+              </button>
+            </div>
+
+            <button
+              className="mobile-menu-btn md:hidden bg-none border-none text-muted hover:text-foreground transition-colors"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label={mobileMenuOpen ? "إغلاق القائمة" : "فتح القائمة"}
+            >
+              {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* القائمة المتنقلة */}
+      {mobileMenuOpen && (
+        <div className="mobile-menu md:hidden absolute top-full left-0 right-0 bg-background-light border-b border-background-lighter py-4 px-6 shadow-lg animate-fadeIn">
+          <nav>
+            <ul className="flex flex-col gap-4">
+              <li>
+                <Link
+                  to="/"
+                  className={`block py-2 hover:text-primary transition-colors ${location.pathname === "/" ? "text-primary font-medium" : ""}`}
+                >
+                  الرئيسية
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/chat"
+                  className={`block py-2 hover:text-primary transition-colors ${location.pathname === "/chat" ? "text-primary font-medium" : ""}`}
+                >
+                  الدردشة
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/models"
+                  className={`block py-2 hover:text-primary transition-colors ${location.pathname === "/models" ? "text-primary font-medium" : ""}`}
+                >
+                  النماذج
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/training"
+                  className={`block py-2 hover:text-primary transition-colors ${location.pathname === "/training" ? "text-primary font-medium" : ""}`}
+                >
+                  التدريب
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/terminal"
+                  className={`block py-2 hover:text-primary transition-colors ${location.pathname === "/terminal" ? "text-primary font-medium" : ""}`}
+                >
+                  Terminal
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/setup"
+                  className={`block py-2 hover:text-primary transition-colors ${location.pathname === "/setup" ? "text-primary font-medium" : ""}`}
+                >
+                  الإعداد
+                </Link>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      )}
+    </header>
+  )
+}
+
+export default Header

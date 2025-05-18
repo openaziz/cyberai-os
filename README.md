@@ -55,10 +55,10 @@
 
 \`\`\`bash
 # استنساخ المستودع
-git clone https://github.com/yourusername/gangstergpt.git
+git clone https://github.com/openaziz/cyberai-os.git
 
 # الانتقال إلى دليل المشروع
-cd gangstergpt
+cd cyberai-os
 
 # تثبيت التبعيات
 npm install
@@ -143,8 +143,8 @@ REDIS_URL=your_upstash_redis_url
 
 إذا واجهت أي مشاكل أو كانت لديك أسئلة، يرجى فتح مشكلة في هذا المستودع أو التواصل معنا عبر:
 
-- البريد الإلكتروني: support@gangstergpt.com
-- تويتر: [@GangsterGPT](https://twitter.com/GangsterGPT)
+- البريد الإلكتروني: sa6aa6116@gmail.com
+- سناب https://www.snapchat.com/add/bx90_9?share_id=BAr6a5ZpZkA&locale=ar-EG
 
 ---
 
