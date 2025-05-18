@@ -1,91 +1,62 @@
 // تكوين المتغيرات البيئية للتطبيق
-
-// استيراد المتغيرات البيئية من ملف .env أو من متغيرات البيئة
-const getEnvVariable = (key: string, defaultValue = ""): string => {
-  // في بيئة الإنتاج، استخدم متغيرات البيئة الفعلية
-  if (typeof process !== "undefined" && process.env && process.env[key]) {
-    return process.env[key] as string
-  }
-
-  // في بيئة التطوير، استخدم متغيرات Vite
-  if (typeof window !== "undefined" && (window as any).ENV && (window as any).ENV[key] !== undefined) {
-    return (window as any).ENV[key] as string
-  }
-
-  return defaultValue
-}
-
-// تصدير المتغيرات البيئية المستخدمة في التطبيق
 export const ENV = {
-  // مفاتيح API للنماذج السحابية
-  OPENROUTER_API_KEY: getEnvVariable("OPENROUTER_API_KEY"),
-  TOGETHER_API_KEY: getEnvVariable("TOGETHER_API_KEY"),
+  // المسار الأساسي للتطبيق
+  BASE_URL: process.env.NEXT_PUBLIC_APP_URL || "https://cyberai-os.vercel.app/",
+  API_URL: process.env.NEXT_PUBLIC_API_URL || "https://api.cyberai-os.vercel.app/",
 
   // إعدادات قاعدة البيانات
-  NEON_DATABASE_URL: getEnvVariable("NEON_DATABASE_URL"),
-  NEON_POSTGRES_URL: getEnvVariable("NEON_POSTGRES_URL"),
-  NEON_POSTGRES_PRISMA_URL: getEnvVariable("NEON_POSTGRES_PRISMA_URL"),
-  NEON_POSTGRES_URL_NO_SSL: getEnvVariable("NEON_POSTGRES_URL_NO_SSL"),
-  NEON_POSTGRES_HOST: getEnvVariable("NEON_POSTGRES_HOST"),
-  NEON_POSTGRES_DATABASE: getEnvVariable("NEON_POSTGRES_DATABASE"),
-  NEON_POSTGRES_USER: getEnvVariable("NEON_POSTGRES_USER"),
-  NEON_POSTGRES_PASSWORD: getEnvVariable("NEON_POSTGRES_PASSWORD"),
+  DATABASE_URL: process.env.NEON_DATABASE_URL || process.env.DATABASE_URL,
+
+  // مفاتيح API للنماذج السحابية
+  GROQ_API_KEY: process.env.GROQ_API_KEY,
+  OPENROUTER_API_KEY: process.env.OPENROUTER_API_KEY,
+  TOGETHER_API_KEY: process.env.TOGETHER_API_KEY,
 
   // إعدادات Redis
-  KV_URL: getEnvVariable("KV_URL"),
-  REDIS_URL: getEnvVariable("REDIS_URL"),
-  KV_REST_API_URL: getEnvVariable("KV_REST_API_URL"),
-  KV_REST_API_TOKEN: getEnvVariable("KV_REST_API_TOKEN"),
-  KV_REST_API_READ_ONLY_TOKEN: getEnvVariable("KV_REST_API_READ_ONLY_TOKEN"),
-
-  // مفاتيح Neon Stack - تمت إزالة المفتاح الحساس
-  NEON_NEXT_PUBLIC_STACK_PROJECT_ID: getEnvVariable("NEON_NEXT_PUBLIC_STACK_PROJECT_ID"),
-  // المفتاح الحساس تمت إزالته تمامًا
-  NEON_STACK_SECRET_SERVER_KEY: getEnvVariable("NEON_STACK_SECRET_SERVER_KEY"),
+  REDIS_URL: process.env.REDIS_URL || process.env.KV_URL,
 
   // إعدادات التطبيق
-  NEXT_PUBLIC_APP_URL: getEnvVariable("NEXT_PUBLIC_APP_URL", "https://cyberai-os.vercel.app"),
-  NEXT_PUBLIC_API_URL: getEnvVariable("NEXT_PUBLIC_API_URL", "https://api.cyberai-os.vercel.app"),
+  DEFAULT_THEME: process.env.DEFAULT_THEME || "dark",
+  DEFAULT_LANGUAGE: process.env.DEFAULT_LANGUAGE || "ar",
+  ENABLE_ANALYTICS: process.env.ENABLE_ANALYTICS === "true",
+  ENABLE_LOCAL_STORAGE: process.env.ENABLE_LOCAL_STORAGE !== "false",
+  ENCRYPT_LOCAL_DATA: process.env.ENCRYPT_LOCAL_DATA === "true",
 
   // إعدادات النماذج المحلية
-  LOCAL_MODELS_PATH: getEnvVariable("LOCAL_MODELS_PATH", "./models"),
-  DEFAULT_LOCAL_MODEL: getEnvVariable("DEFAULT_LOCAL_MODEL", "tinyllama"),
-  MAX_THREADS: Number.parseInt(getEnvVariable("MAX_THREADS", "4")),
-  USE_GPU: getEnvVariable("USE_GPU", "auto"),
+  LOCAL_MODELS_PATH: process.env.LOCAL_MODELS_PATH || "./models",
+  DEFAULT_LOCAL_MODEL: process.env.DEFAULT_LOCAL_MODEL || "tinyllama",
+  MAX_THREADS: Number.parseInt(process.env.MAX_THREADS || "4"),
+  USE_GPU: process.env.USE_GPU || "auto",
 
-  // إعدادات واجهة المستخدم
-  DEFAULT_THEME: getEnvVariable("DEFAULT_THEME", "dark"),
-  DEFAULT_LANGUAGE: getEnvVariable("DEFAULT_LANGUAGE", "ar"),
-  ENABLE_ANALYTICS: getEnvVariable("ENABLE_ANALYTICS", "false") === "true",
-  ENABLE_LOCAL_STORAGE: getEnvVariable("ENABLE_LOCAL_STORAGE", "true") === "true",
-  ENCRYPT_LOCAL_DATA: getEnvVariable("ENCRYPT_LOCAL_DATA", "true") === "true",
-
-  // إعدادات التطبيق
-  IS_PRODUCTION: process.env.NODE_ENV === "production",
-  BASE_URL: process.env.NEXT_PUBLIC_APP_URL || "/",
-  APP_VERSION: process.env.APP_VERSION || "1.0.0",
-
-  // إعدادات التدريب المحلي
-  TRAINING_TEMP_DIR: getEnvVariable("TRAINING_TEMP_DIR", "./training_temp"),
-  MAX_TRAINING_EPOCHS: Number.parseInt(getEnvVariable("MAX_TRAINING_EPOCHS", "3")),
-  LEARNING_RATE: Number.parseFloat(getEnvVariable("LEARNING_RATE", "0.00002")),
-  BATCH_SIZE: Number.parseInt(getEnvVariable("BATCH_SIZE", "4")),
+  // إعدادات التدريب
+  TRAINING_TEMP_DIR: process.env.TRAINING_TEMP_DIR || "./training_temp",
+  MAX_TRAINING_EPOCHS: Number.parseInt(process.env.MAX_TRAINING_EPOCHS || "3"),
+  LEARNING_RATE: Number.parseFloat(process.env.LEARNING_RATE || "0.00002"),
+  BATCH_SIZE: Number.parseInt(process.env.BATCH_SIZE || "4"),
 
   // إعدادات Terminal
-  TERMINAL_HISTORY_SIZE: Number.parseInt(getEnvVariable("TERMINAL_HISTORY_SIZE", "1000")),
-  TERMINAL_ENABLE_NETWORK: getEnvVariable("TERMINAL_ENABLE_NETWORK", "true") === "true",
-  TERMINAL_MAX_PROCESSES: Number.parseInt(getEnvVariable("TERMINAL_MAX_PROCESSES", "5")),
+  TERMINAL_HISTORY_SIZE: Number.parseInt(process.env.TERMINAL_HISTORY_SIZE || "1000"),
+  TERMINAL_ENABLE_NETWORK: process.env.TERMINAL_ENABLE_NETWORK !== "false",
+  TERMINAL_MAX_PROCESSES: Number.parseInt(process.env.TERMINAL_MAX_PROCESSES || "5"),
 }
 
-// وظائف مساعدة للتحقق من توفر الخدمات
-export const isOpenRouterAvailable = (): boolean => {
-  return process.env.OPENROUTER_API_KEY !== undefined && process.env.OPENROUTER_API_KEY !== ""
+// دوال مساعدة للتحقق من توفر الخدمات
+export function isGroqAvailable(): boolean {
+  return !!ENV.GROQ_API_KEY
 }
 
-export const isTogetherAvailable = (): boolean => {
-  return process.env.TOGETHER_API_KEY !== undefined && process.env.TOGETHER_API_KEY !== ""
+export function isOpenRouterAvailable(): boolean {
+  return !!ENV.OPENROUTER_API_KEY
 }
 
-export const isGroqAvailable = () => {
-  return process.env.GROQ_API_KEY !== undefined && process.env.GROQ_API_KEY !== ""
+export function isTogetherAvailable(): boolean {
+  return !!ENV.TOGETHER_API_KEY
+}
+
+export function isDatabaseAvailable(): boolean {
+  return !!ENV.DATABASE_URL
+}
+
+export function isRedisAvailable(): boolean {
+  return !!ENV.REDIS_URL
 }

@@ -1,29 +1,18 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Inter } from "next/font/google"
 import "./globals.css"
-import { ThemeProvider } from "@/components/theme-provider"
-
-const inter = Inter({ subsets: ["latin"] })
+import ClientLayout from "./ClientLayout"
 
 export const metadata: Metadata = {
-  title: "CyberAI OS",
-  description: "نظام تشغيل الذكاء الاصطناعي",
+  title: "CyberAI OS - نظام الذكاء الاصطناعي المفتوح",
+  description: "منصة ذكاء اصطناعي مفتوحة المصدر تمنحك القوة والخصوصية والتحكم الكامل",
     generator: 'v0.dev'
 }
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode
-}>) {
-  return (
-    <html lang="ar" dir="rtl" suppressHydrationWarning>
-      <body className={inter.className}>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-          {children}
-        </ThemeProvider>
-      </body>
-    </html>
-  )
+}) {
+  return <ClientLayout>{children}</ClientLayout>
 }

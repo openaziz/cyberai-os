@@ -1,0 +1,432 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* الألوان الأساسية */
+    --primary: 0 100% 50%;
+    --primary-dark: 0 100% 40%;
+    --primary-light: 0 100% 60%;
+    --accent: 195 100% 50%;
+    --accent-dark: 195 100% 40%;
+    --accent-light: 195 100% 60%;
+    --gold: 51 100% 50%;
+    --gold-dark: 51 100% 40%;
+    --gold-light: 51 100% 60%;
+
+    /* ألوان الخلفية */
+    --background: 0 0% 7%;
+    --background-darker: 0 0% 4%;
+    --background-light: 0 0% 12%;
+    --background-lighter: 0 0% 16%;
+
+    /* ألوان النصوص */
+    --foreground: 0 0% 100%;
+    --muted: 0 0% 67%;
+    --dark-text: 0 0% 20%;
+  }
+
+  .light-theme {
+    --background: 0 0% 96%;
+    --background-darker: 0 0% 88%;
+    --background-light: 0 0% 100%;
+    --background-lighter: 0 0% 98%;
+    --foreground: 0 0% 20%;
+    --muted: 0 0% 40%;
+    --dark-text: 0 0% 7%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-cairo;
+    direction: rtl;
+  }
+}
+
+@font-face {
+  font-family: "Cairo";
+  src: url("/cyberai-os/fonts/Cairo-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Cairo";
+  src: url("/cyberai-os/fonts/Cairo-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Cairo";
+  src: url("/cyberai-os/fonts/Cairo-SemiBold.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Cairo";
+  src: url("/cyberai-os/fonts/Cairo-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: "Cairo", "Tajawal", sans-serif;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* الخلفية */
+.background-overlay {
+  @apply fixed inset-0 bg-cover bg-center opacity-5 pointer-events-none z-[-1];
+  background-image: url("/cyberai-os/assets/bg-pattern.png");
+}
+
+/* الرأس */
+.logo {
+  @apply transition-transform duration-300;
+}
+
+.logo:hover {
+  @apply transform scale-110;
+}
+
+/* القائمة */
+.nav-dropdown-content {
+  @apply absolute top-full right-0 bg-background-lighter min-w-[180px] rounded-md shadow-lg py-2 hidden z-10;
+}
+
+.nav-group:hover .nav-dropdown-content {
+  @apply block animate-fadeIn;
+}
+
+/* أزرار */
+.primary-btn {
+  @apply bg-primary text-white py-2 px-6 rounded-md font-semibold inline-flex items-center gap-2 transition-all duration-200 border-none;
+}
+
+.primary-btn:hover {
+  @apply bg-primary-dark text-white transform -translate-y-0.5;
+}
+
+.secondary-btn {
+  @apply bg-transparent text-foreground py-2 px-6 rounded-md font-semibold inline-flex items-center gap-2 transition-all duration-200 border border-background-lighter;
+}
+
+.secondary-btn:hover {
+  @apply bg-background-lighter text-foreground transform -translate-y-0.5;
+}
+
+.large-btn {
+  @apply py-4 px-8 text-lg;
+}
+
+.icon-btn {
+  @apply bg-none border-none text-muted text-base p-1 rounded-full flex items-center justify-center transition-all duration-200;
+}
+
+.icon-btn:hover {
+  @apply bg-background-lighter text-foreground;
+}
+
+.pulse-btn {
+  animation: pulse 2s infinite;
+}
+
+/* الرسوم المتحركة */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes typing {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 0, 51, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(255, 0, 51, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 0, 51, 0);
+  }
+}
+
+/* Typing indicator */
+.typing-indicator {
+  padding: 10px 0;
+}
+
+.typing-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: hsl(var(--primary));
+  margin-right: 3px;
+}
+
+.typing-dot.delay-0 {
+  animation-delay: 0ms;
+}
+
+.typing-dot.delay-100 {
+  animation-delay: 100ms;
+}
+
+.typing-dot.delay-200 {
+  animation-delay: 200ms;
+}
+
+/* Switch toggle */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 20px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: hsl(var(--background-lighter));
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: hsl(var(--primary));
+}
+
+input:checked + .slider:before {
+  transform: translateX(20px);
+}
+
+.slider.round {
+  border-radius: 20px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+/* Animations */
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Loading spinner */
+.spinner {
+  width: 40px;
+  height: 40px;
+  margin: 0 auto;
+  border-radius: 50%;
+  border: 3px solid rgba(255, 0, 51, 0.2);
+  border-top-color: hsl(var(--primary));
+  animation: spin 1s infinite linear;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* تحسينات للتجاوب */
+@media (max-width: 768px) {
+  .model-card {
+    min-width: 100%;
+  }
+
+  .feature-card {
+    margin-bottom: 1rem;
+  }
+
+  .hero-section {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    min-height: auto;
+  }
+}
+
+/* تحسينات للتباين */
+.gold-text {
+  color: hsl(var(--gold));
+  text-shadow: 0px 0px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* تحسينات للبطاقات */
+.model-card {
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.model-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(255, 0, 51, 0.2);
+}
+
+/* تحسينات للأزرار */
+.download-btn {
+  position: relative;
+  overflow: hidden;
+}
+
+.download-btn:after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.7s;
+}
+
+.download-btn:hover:after {
+  left: 100%;
+}
+
+/* تحسينات لشريط التقدم */
+.setup-progress {
+  display: flex;
+  justify-content: space-between;
+  margin: 2em 0;
+  position: relative;
+}
+
+.setup-progress:before {
+  content: "";
+  position: absolute;
+  top: 15px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: hsl(var(--background-light));
+  z-index: 1;
+}
+
+.step {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  width: 33%;
+}
+
+.step-number {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: hsl(var(--background-light));
+  color: hsl(var(--text-light));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 10px;
+}
+
+.step.active .step-number {
+  background: hsl(var(--primary));
+}
+
+.step-title {
+  font-size: 0.9em;
+}
+
+/* تحسينات للخلفية */
+.parallax-bg {
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  opacity: 0.2;
+}
+
+/* تحسينات للميزات */
+.feature {
+  background: linear-gradient(135deg, hsl(var(--background-light)), hsl(var(--background)));
+  border-right: 3px solid hsl(var(--primary));
+}
+
+/* تحسينات للترمينال */
+.terminal-container {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.terminal-output {
+  font-family: "Courier New", monospace;
+}
+
+.terminal-command {
+  margin-bottom: 0.5rem;
+}
+
+.terminal-response {
+  margin-bottom: 1rem;
+}
+
+.terminal-input {
+  caret-color: hsl(var(--primary));
+}
+
+.terminal-prompt {
+  user-select: none;
+}

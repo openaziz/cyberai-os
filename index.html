@@ -1,572 +1,180 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CyberAI OS - نظام ذكاء اصطناعي محلي</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CyberAI OS - منصة ذكاء اصطناعي محلية بدون قيود</title>
+  <meta name="description" content="شغل نماذج الذكاء الاصطناعي على جهازك بخصوصية كاملة ودون الحاجة لمفاتيح API خارجية">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <link rel="icon" href="assets/images/favicon.ico">
 </head>
 <body class="dark-theme">
-    <div class="background-overlay"></div>
-    
-    <header>
-        <div class="logo-container">
-            <img src="assets/logo.svg" alt="CyberAI OS Logo" class="logo">
-            <h1>CyberAI OS</h1>
-        </div>
-        <nav>
-            <div class="nav-group">
-                <button class="nav-dropdown-btn">الرئيسية <i class="fas fa-chevron-down"></i></button>
-                <div class="nav-dropdown-content">
-                    <a href="index.html" class="active">الصفحة الرئيسية</a>
-                    <a href="about.html">عن المشروع</a>
-                </div>
-            </div>
-            <div class="nav-group">
-                <button class="nav-dropdown-btn">النماذج <i class="fas fa-chevron-down"></i></button>
-                <div class="nav-dropdown-content">
-                    <a href="models.html">النماذج المحلية</a>
-                    <a href="model-manager.html">إدارة النماذج</a>
-                </div>
-            </div>
-            <div class="nav-group">
-                <button class="nav-dropdown-btn">الدردشة <i class="fas fa-chevron-down"></i></button>
-                <div class="nav-dropdown-content">
-                    <a href="chat.html">واجهة الدردشة</a>
-                    <a href="chat-advanced.html">الدردشة المتقدمة</a>
-                </div>
-            </div>
-            <div class="nav-group">
-                <button class="nav-dropdown-btn">المطورين <i class="fas fa-chevron-down"></i></button>
-                <div class="nav-dropdown-content">
-                    <a href="api.html">واجهة API</a>
-                    <a href="api-keys.html">مفاتيح API</a>
-                    <a href="code-assistant.html">مساعد الأكواد</a>
-                </div>
-            </div>
-            <div class="nav-group">
-                <button class="nav-dropdown-btn">المساعدة <i class="fas fa-chevron-down"></i></button>
-                <div class="nav-dropdown-content">
-                    <a href="setup.html">دليل الإعداد</a>
-                    <a href="tools.html">أدوات مساعدة</a>
-                    <a href="contact.html">اتصل بنا</a>
-                </div>
-            </div>
-        </nav>
-        <div class="header-actions">
-            <button id="theme-toggle" class="theme-toggle" aria-label="تبديل السمة">
-                <i class="fas fa-moon"></i>
-                <i class="fas fa-sun"></i>
-            </button>
-            <div class="auth-container">
-                <a href="login.html" class="login-btn">تسجيل الدخول</a>
-                <div class="user-profile" style="display: none;">
-                    <div class="user-avatar">A</div>
-                    <div class="user-info">
-                        <span class="user-name">اسم المستخدم</span>
-                        <span class="user-key">sk_cyberai_***</span>
-                    </div>
-                    <button class="logout-btn"><i class="fas fa-sign-out-alt"></i></button>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <main>
-        <section class="hero-section">
-            <div class="hero-content">
-                <h2 class="hero-title">تجربة ذكاء اصطناعي <span class="highlight">محلية</span> بدون قيود</h2>
-                <p class="hero-subtitle">شغّل نماذج الذكاء الاصطناعي على جهازك بخصوصية كاملة ودون الحاجة لمفاتيح API خارجية</p>
-                <div class="hero-actions">
-                    <a href="chat.html" class="primary-btn pulse-btn">
-                        <i class="fas fa-comments"></i>
-                        جرب الدردشة الآن
-                    </a>
-                    <a href="setup.html" class="secondary-btn">
-                        <i class="fas fa-download"></i>
-                        دليل البدء السريع
-                    </a>
-                </div>
-            </div>
-            <div class="hero-chat-preview">
-                <div class="chat-window">
-                    <div class="chat-header">
-                        <div class="model-selector">
-                            <span class="model-name">CyberAI Chat</span>
-                            <i class="fas fa-chevron-down"></i>
-                        </div>
-                        <div class="chat-actions">
-                            <button class="icon-btn"><i class="fas fa-plus"></i></button>
-                            <button class="icon-btn"><i class="fas fa-cog"></i></button>
-                        </div>
-                    </div>
-                    <div class="chat-messages">
-                        <div class="message system">
-                            <div class="message-content">
-                                <p>مرحباً بك في CyberAI OS! كيف يمكنني مساعدتك اليوم؟</p>
-                            </div>
-                        </div>
-                        <div class="message user">
-                            <div class="message-content">
-                                <p>ما هي مميزات تشغيل نماذج الذكاء الاصطناعي محلياً؟</p>
-                            </div>
-                        </div>
-                        <div class="message system typing">
-                            <div class="message-content">
-                                <div class="typing-indicator">
-                                    <span></span>
-                                    <span></span>
-                                    <span></span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="chat-input">
-                        <textarea placeholder="اكتب رسالتك هنا..."></textarea>
-                        <div class="input-actions">
-                            <button class="icon-btn"><i class="fas fa-paperclip"></i></button>
-                            <button class="icon-btn"><i class="fas fa-microphone"></i></button>
-                            <button class="send-btn"><i class="fas fa-paper-plane"></i></button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="features-section">
-            <h2 class="section-title">لماذا <span class="highlight">CyberAI OS</span>؟</h2>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-shield-alt"></i>
-                    </div>
-                    <h3>خصوصية كاملة</h3>
-                    <p>بياناتك تبقى على جهازك ولا تُرسل إلى أي خوادم خارجية، مما يضمن أمان معلوماتك الحساسة</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-unlock"></i>
-                    </div>
-                    <h3>استقلالية تامة</h3>
-                    <p>لا حاجة للاشتراكات أو المفاتيح المدفوعة، استخدم النماذج بحرية دون قيود أو تكاليف إضافية</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-sliders-h"></i>
-                    </div>
-                    <h3>تخصيص متقدم</h3>
-                    <p>إمكانية تعديل النماذج وتدريبها حسب احتياجاتك الخاصة لتحسين الأداء في مجالات محددة</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-bolt"></i>
-                    </div>
-                    <h3>أداء سريع</h3>
-                    <p>استجابة فورية دون تأخير بفضل المعالجة المحلية، حتى بدون اتصال بالإنترنت</p>
-                </div>
-            </div>
-        </section>
-
-        <section class="models-section">
-            <h2 class="section-title">النماذج <span class="highlight">الموصى بها</span></h2>
-            <div class="models-carousel">
-                <div class="model-card">
-                    <div class="model-image">
-                        <img src="assets/model-tiny.webp" alt="TinyLlama Model">
-                    </div>
-                    <div class="model-content">
-                        <div class="model-header">
-                            <h3>TinyLlama (1.1B)</h3>
-                            <span class="model-badge light">خفيف</span>
-                        </div>
-                        <p>نموذج خفيف مثالي للهواتف والأجهزة محدودة الموارد</p>
-                        <div class="model-specs">
-                            <div class="spec">
-                                <i class="fas fa-weight"></i>
-                                <span>400MB-1GB</span>
-                            </div>
-                            <div class="spec">
-                                <i class="fas fa-microchip"></i>
-                                <span>CPU</span>
-                            </div>
-                            <div class="spec">
-                                <i class="fas fa-file-code"></i>
-                                <span>GGUF</span>
-                            </div>
-                        </div>
-                        <div class="model-actions">
-                            <a href="setup.html#tinyllama" class="primary-btn">
-                                <i class="fas fa-download"></i>
-                                تثبيت النموذج
-                            </a>
-                            <button class="icon-btn info-btn">
-                                <i class="fas fa-info-circle"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div class="model-card">
-                    <div class="model-image">
-                        <img src="assets/model-llama.webp" alt="Llama 2 Model">
-                    </div>
-                    <div class="model-content">
-                        <div class="model-header">
-                            <h3>Llama 2 (7B)</h3>
-                            <span class="model-badge balanced">متوازن</span>
-                        </div>
-                        <p>نموذج متوسط الحجم مع أداء متوازن للحواسيب المكتبية</p>
-                        <div class="model-specs">
-                            <div class="spec">
-                                <i class="fas fa-weight"></i>
-                                <span>4GB</span>
-                            </div>
-                            <div class="spec">
-                                <i class="fas fa-microchip"></i>
-                                <span>CPU/GPU</span>
-                            </div>
-                            <div class="spec">
-                                <i class="fas fa-file-code"></i>
-                                <span>GGUF</span>
-                            </div>
-                        </div>
-                        <div class="model-actions">
-                            <a href="setup.html#llama2" class="primary-btn">
-                                <i class="fas fa-download"></i>
-                                تثبيت النموذج
-                            </a>
-                            <button class="icon-btn info-btn">
-                                <i class="fas fa-info-circle"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div class="model-card">
-                    <div class="model-image">
-                        <img src="assets/model-deepseek.webp" alt="DeepSeek Model">
-                    </div>
-                    <div class="model-content">
-                        <div class="model-header">
-                            <h3>DeepSeek (70B)</h3>
-                            <span class="model-badge premium">متقدم</span>
-                        </div>
-                        <p>نموذج متقدم للمهام المعقدة والبرمجة المتخصصة</p>
-                        <div class="model-specs">
-                            <div class="spec">
-                                <i class="fas fa-weight"></i>
-                                <span>API</span>
-                            </div>
-                            <div class="spec">
-                                <i class="fas fa-microchip"></i>
-                                <span>Cloud</span>
-                            </div>
-                            <div class="spec">
-                                <i class="fas fa-file-code"></i>
-                                <span>REST API</span>
-                            </div>
-                        </div>
-                        <div class="model-actions">
-                            <a href="api.html#deepseek" class="primary-btn">
-                                <i class="fas fa-plug"></i>
-                                ربط API
-                            </a>
-                            <button class="icon-btn info-btn">
-                                <i class="fas fa-info-circle"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="carousel-controls">
-                <button class="carousel-control prev"><i class="fas fa-chevron-right"></i></button>
-                <div class="carousel-indicators">
-                    <span class="indicator active"></span>
-                    <span class="indicator"></span>
-                    <span class="indicator"></span>
-                </div>
-                <button class="carousel-control next"><i class="fas fa-chevron-left"></i></button>
-            </div>
-        </section>
-
-        <section class="setup-section">
-            <h2 class="section-title">البدء <span class="highlight">السريع</span></h2>
-            <div class="setup-steps">
-                <div class="setup-progress">
-                    <div class="progress-step active">
-                        <div class="step-number">1</div>
-                        <div class="step-label">تثبيت المتطلبات</div>
-                    </div>
-                    <div class="progress-line"></div>
-                    <div class="progress-step">
-                        <div class="step-number">2</div>
-                        <div class="step-label">تنزيل النموذج</div>
-                    </div>
-                    <div class="progress-line"></div>
-                    <div class="progress-step">
-                        <div class="step-number">3</div>
-                        <div class="step-label">تشغيل النموذج</div>
-                    </div>
-                </div>
-                
-                <div class="setup-details">
-                    <div class="setup-detail active" id="step-1">
-                        <h3>تثبيت المتطلبات الأساسية</h3>
-                        <p>قم بتثبيت المكتبات والأدوات اللازمة لتشغيل نماذج الذكاء الاصطناعي محلياً:</p>
-                        <div class="code-block">
-                            <pre><code>pip install llama-cpp-python
-pip install transformers
-pip install accelerate</code></pre>
-                            <button class="copy-btn"><i class="fas fa-copy"></i></button>
-                        </div>
-                        <a href="setup.html" class="text-link">عرض الدليل الكامل <i class="fas fa-arrow-left"></i></a>
-                        <div class="step-actions">
-                            <button class="next-step-btn">الخطوة التالية <i class="fas fa-arrow-left"></i></button>
-                        </div>
-                    </div>
-                    
-                    <div class="setup-detail" id="step-2" style="display: none;">
-                        <h3>تنزيل النموذج المكمّم</h3>
-                        <p>قم بتنزيل النموذج المناسب لجهازك من صفحة النماذج المحلية:</p>
-                        <div class="code-block">
-                            <pre><code>wget https://huggingface.co/TheBloke/TinyLlama-1.1B-Chat-v1.0-GGUF/resolve/main/tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf</code></pre>
-                            <button class="copy-btn"><i class="fas fa-copy"></i></button>
-                        </div>
-                        <a href="models.html" class="text-link">استعراض النماذج المتاحة <i class="fas fa-arrow-left"></i></a>
-                        <div class="step-actions">
-                            <button class="prev-step-btn"><i class="fas fa-arrow-right"></i> الخطوة السابقة</button>
-                            <button class="next-step-btn">الخطوة التالية <i class="fas fa-arrow-left"></i></button>
-                        </div>
-                    </div>
-                    
-                    <div class="setup-detail" id="step-3" style="display: none;">
-                        <h3>تشغيل النموذج واستخدامه</h3>
-                        <p>قم بتشغيل النموذج باستخدام الأوامر التالية:</p>
-                        <div class="code-block">
-                            <pre><code>from llama_cpp import Llama
-
-model = Llama("tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf")
-response = model.create_chat_completion([
-    {"role": "user", "content": "مرحباً، كيف حالك؟"}
-])
-print(response["choices"][0]["message"]["content"])</code></pre>
-                            <button class="copy-btn"><i class="fas fa-copy"></i></button>
-                        </div>
-                        <a href="chat.html" class="text-link">استخدام واجهة الدردشة <i class="fas fa-arrow-left"></i></a>
-                        <div class="step-actions">
-                            <button class="prev-step-btn"><i class="fas fa-arrow-right"></i> الخطوة السابقة</button>
-                            <a href="chat.html" class="primary-btn">
-                                <i class="fas fa-comments"></i>
-                                بدء الدردشة
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="api-section">
-            <h2 class="section-title">واجهة <span class="highlight">API</span> متكاملة</h2>
-            <div class="api-container">
-                <div class="api-content">
-                    <p class="api-description">استخدم واجهة برمجة التطبيقات (API) للوصول إلى نماذج الذكاء الاصطناعي المتقدمة مثل DeepSeek-R1-70B من خلال واجهة RESTful بسيطة:</p>
-                    
-                    <div class="api-tabs">
-                        <button class="api-tab active" data-tab="curl">cURL</button>
-                        <button class="api-tab" data-tab="python">Python</button>
-                        <button class="api-tab" data-tab="javascript">JavaScript</button>
-                    </div>
-                    
-                    <div class="api-code-container">
-                        <div class="code-block api-code active" id="curl-code">
-                            <pre><code>curl -X POST 'https://api.search1api.com/v1/chat/completions' \
---header 'Content-Type: application/json' \
---data '{
-  "model": "deepseek-r1-70b-online",
-  "messages": [
-    {
-      "role": "user",
-      "content": "Explain quantum computing in simple terms"
-    }
-  ],
-  "stream": true
-}'</code></pre>
-                            <button class="copy-btn"><i class="fas fa-copy"></i></button>
-                        </div>
-                        
-                        <div class="code-block api-code" id="python-code" style="display: none;">
-                            <pre><code>import requests
-import json
-
-url = "https://api.search1api.com/v1/chat/completions"
-headers = {
-    "Content-Type": "application/json"
-}
-data = {
-    "model": "deepseek-r1-70b-online",
-    "messages": [
-        {
-            "role": "user",
-            "content": "Explain quantum computing in simple terms"
-        }
-    ],
-    "stream": True
-}
-
-response = requests.post(url, headers=headers, json=data)
-print(response.text)</code></pre>
-                            <button class="copy-btn"><i class="fas fa-copy"></i></button>
-                        </div>
-                        
-                        <div class="code-block api-code" id="javascript-code" style="display: none;">
-                            <pre><code>const url = 'https://api.search1api.com/v1/chat/completions';
-const headers = {
-  'Content-Type': 'application/json'
-};
-const data = {
-  model: 'deepseek-r1-70b-online',
-  messages: [
-    {
-      role: 'user',
-      content: 'Explain quantum computing in simple terms'
-    }
-  ],
-  stream: true
-};
-
-fetch(url, {
-  method: 'POST',
-  headers: headers,
-  body: JSON.stringify(data)
-})
-.then(response => response.text())
-.then(text => console.log(text));</code></pre>
-                            <button class="copy-btn"><i class="fas fa-copy"></i></button>
-                        </div>
-                    </div>
-                    
-                    <div class="api-actions">
-                        <a href="api.html" class="primary-btn">
-                            <i class="fas fa-code"></i>
-                            استكشاف API
-                        </a>
-                        <a href="api-keys.html" class="secondary-btn">
-                            <i class="fas fa-key"></i>
-                            إدارة المفاتيح
-                        </a>
-                    </div>
-                </div>
-                
-                <div class="api-visual">
-                    <div class="api-response-preview">
-                        <div class="response-header">
-                            <h4>استجابة API</h4>
-                            <div class="response-status success">200 OK</div>
-                        </div>
-                        <div class="response-body">
-                            <pre><code>{
-  "id": "chatcmpl-123456789",
-  "object": "chat.completion.chunk",
-  "created": 1684225693,
-  "model": "deepseek-r1-70b-online",
-  "choices": [
-    {
-      "index": 0,
-      "delta": {
-        "content": "الحوسبة الكمية هي نوع من الحوسبة يستخدم ظواهر ميكانيكا الكم مثل التراكب والتشابك لمعالجة المعلومات. بينما تستخدم أجهزة الكمبيوتر التقليدية البتات (0 أو 1)، تستخدم أجهزة الكمبيوتر الكمية الكيوبتات التي يمكن أن تكون في حالة 0، 1، أو مزيج من الاثنين في نفس الوقت."
-      },
-      "finish_reason": null
-    }
-  ]
-}</code></pre>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="cta-section">
-            <div class="cta-content">
-                <h2>ابدأ رحلتك مع الذكاء الاصطناعي المحلي اليوم</h2>
-                <p>انضم إلى مجتمع CyberAI OS واستمتع بقوة الذكاء الاصطناعي مع الحفاظ على خصوصيتك</p>
-                <div class="cta-actions">
-                    <a href="signup.html" class="primary-btn large-btn">
-                        <i class="fas fa-user-plus"></i>
-                        إنشاء حساب مجاني
-                    </a>
-                    <a href="models.html" class="secondary-btn large-btn">
-                        <i class="fas fa-robot"></i>
-                        استكشاف النماذج
-                    </a>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <footer>
-        <div class="footer-content">
-            <div class="footer-logo">
-                <img src="assets/logo.svg" alt="CyberAI OS Logo" class="logo">
-                <h3>CyberAI OS</h3>
-                <p>نظام ذكاء اصطناعي محلي بدون مفاتيح API</p>
-            </div>
-            
-            <div class="footer-links">
-                <div class="footer-links-group">
-                    <h4>روابط سريعة</h4>
-                    <ul>
-                        <li><a href="index.html">الرئيسية</a></li>
-                        <li><a href="models.html">النماذج المحلية</a></li>
-                        <li><a href="chat.html">واجهة الدردشة</a></li>
-                        <li><a href="setup.html">دليل الإعداد</a></li>
-                        <li><a href="api.html">واجهة API</a></li>
-                    </ul>
-                </div>
-                
-                <div class="footer-links-group">
-                    <h4>المساعدة والدعم</h4>
-                    <ul>
-                        <li><a href="faq.html">الأسئلة الشائعة</a></li>
-                        <li><a href="documentation.html">التوثيق</a></li>
-                        <li><a href="troubleshooting.html">حل المشكلات</a></li>
-                        <li><a href="contact.html">اتصل بنا</a></li>
-                    </ul>
-                </div>
-                
-                <div class="footer-links-group">
-                    <h4>تابع عبدالعزيز</h4>
-                    <div class="social-links">
-                        <a href="https://www.snapchat.com/add/bx90_9" target="_blank" class="social-link">
-                            <i class="fab fa-snapchat"></i>
-                            <span>Snapchat</span>
-                        </a>
-                        <a href="https://www.instagram.com/3zooo6" target="_blank" class="social-link">
-                            <i class="fab fa-instagram"></i>
-                            <span>Instagram</span>
-                        </a>
-                        <a href="mailto:abdulzizsaleme@gmail.com" class="social-link">
-                            <i class="fas fa-envelope"></i>
-                            <span>Email</span>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="footer-bottom">
-            <p>© 2025 عبدالعزيز - جميع الحقوق محفوظة</p>
-            <div class="footer-bottom-links">
-                <a href="privacy.html">سياسة الخصوصية</a>
-                <a href="terms.html">شروط الاستخدام</a>
-            </div>
-        </div>
-    </footer>
-
-    <div class="floating-help">
-        <button class="help-btn">
-            <i class="fas fa-question"></i>
-        </button>
+  <header>
+    <div class="container">
+      <div class="logo">
+        <a href="https://openaziz.github.io/cyberai-os/">
+          <img src="assets/images/logo.svg" alt="CyberAI OS Logo">
+          <span>CyberAI OS</span>
+        </a>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="#features">المميزات</a></li>
+          <li><a href="#models">النماذج</a></li>
+          <li><a href="terminal.html">الطرفية</a></li>
+          <li><a href="help.html">المساعدة</a></li>
+          <li><a href="chat.html" class="btn-primary">جرب المحادثة</a></li>
+        </ul>
+      </nav>
+      <button class="theme-toggle">🌙</button>
     </div>
+  </header>
 
-    <script src="js/main.js"></script>
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="hero-content">
+          <h1>تجربة ذكاء اصطناعي محلية بدون قيود</h1>
+          <p>شغل نماذج الذكاء الاصطناعي على جهازك بخصوصية كاملة ودون الحاجة لمفاتيح API خارجية</p>
+          <div class="cta-buttons">
+            <a href="chat.html" class="btn-primary">جرب المحادثة الآن</a>
+            <a href="#features" class="btn-secondary">تعرف على المزيد</a>
+          </div>
+        </div>
+        <div class="hero-image">
+          <img src="assets/images/hero-image.svg" alt="CyberAI OS Interface">
+        </div>
+      </div>
+    </section>
+
+    <section id="features" class="features">
+      <div class="container">
+        <h2>المميزات الرئيسية</h2>
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon">🔒</div>
+            <h3>خصوصية كاملة</h3>
+            <p>تشغيل النماذج محلياً على جهازك دون إرسال بياناتك إلى خوادم خارجية</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">🌐</div>
+            <h3>تشغيل بدون إنترنت</h3>
+            <p>استخدام الذكاء الاصطناعي حتى بدون اتصال بالإنترنت</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">🧠</div>
+            <h3>نماذج متنوعة</h3>
+            <p>دعم لمجموعة واسعة من نماذج الذكاء الاصطناعي المحلية والسحابية</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">⚡</div>
+            <h3>أداء متميز</h3>
+            <p>تحسين الأداء باستخدام وحدة معالجة الرسومات (GPU) وتقنيات التسريع المتقدمة</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="models" class="models">
+      <div class="container">
+        <h2>النماذج المدعومة</h2>
+        <div class="models-tabs">
+          <button class="tab-btn active" data-tab="local">نماذج محلية</button>
+          <button class="tab-btn" data-tab="cloud">نماذج سحابية</button>
+        </div>
+        <div class="tab-content active" id="local">
+          <div class="models-grid">
+            <div class="model-card">
+              <h3>TinyLlama (1.1B)</h3>
+              <p>نموذج خفيف مثالي للأجهزة منخفضة الموارد</p>
+              <span class="tag">CPU</span>
+            </div>
+            <div class="model-card">
+              <h3>Phi-2 (2.7B)</h3>
+              <p>نموذج صغير بأداء ممتاز من Microsoft</p>
+              <span class="tag">CPU/GPU</span>
+            </div>
+            <div class="model-card">
+              <h3>Mistral 7B</h3>
+              <p>نموذج متوسط الحجم بأداء متميز</p>
+              <span class="tag">GPU</span>
+            </div>
+            <div class="model-card">
+              <h3>Llama 2 (7B)</h3>
+              <p>نموذج متعدد الاستخدامات من Meta</p>
+              <span class="tag">GPU</span>
+            </div>
+          </div>
+        </div>
+        <div class="tab-content" id="cloud">
+          <div class="models-grid">
+            <div class="model-card">
+              <h3>DeepSeek R1 70B</h3>
+              <p>نموذج متقدم بدون الحاجة لمفتاح API</p>
+              <span class="tag">No API Key</span>
+            </div>
+            <div class="model-card">
+              <h3>GPT-4o</h3>
+              <p>أحدث نموذج من OpenAI</p>
+              <span class="tag">API Key</span>
+            </div>
+            <div class="model-card">
+              <h3>Claude 3</h3>
+              <p>نموذج متقدم من Anthropic</p>
+              <span class="tag">API Key</span>
+            </div>
+            <div class="model-card">
+              <h3>Gemini Pro</h3>
+              <p>نموذج متطور من Google</p>
+              <span class="tag">API Key</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-logo">
+          <img src="assets/images/logo.svg" alt="CyberAI OS Logo">
+          <span>CyberAI OS</span>
+        </div>
+        <div class="footer-links">
+          <div class="footer-column">
+            <h4>المنتج</h4>
+            <ul>
+              <li><a href="#features">المميزات</a></li>
+              <li><a href="#models">النماذج</a></li>
+              <li><a href="chat.html">المحادثة</a></li>
+              <li><a href="terminal.html">الطرفية</a></li>
+            </ul>
+          </div>
+          <div class="footer-column">
+            <h4>الدعم</h4>
+            <ul>
+              <li><a href="help.html">المساعدة</a></li>
+              <li><a href="setup.html">الإعداد</a></li>
+              <li><a href="https://github.com/openaziz/cyberai-os/issues">الإبلاغ عن مشكلة</a></li>
+            </ul>
+          </div>
+          <div class="footer-column">
+            <h4>المجتمع</h4>
+            <ul>
+              <li><a href="https://github.com/openaziz/cyberai-os">GitHub</a></li>
+              <li><a href="https://twitter.com/openaziz">Twitter</a></li>
+              <li><a href="https://discord.gg/cyberai">Discord</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2024 CyberAI OS. جميع الحقوق محفوظة.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/main.js"></script>
 </body>
 </html>
