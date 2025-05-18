@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="public/deep-thinking-logo.png" alt="Deep Thinking Logo" width="180"/>
+  <img src="Screenshot_٢٠٢٥_٠٥١٩_٠٢٢١٤٥.jpg" alt="Deep Thinking Logo" width="180"/>
   <h1>GangsterGPT</h1>
   <p>منصة ذكاء اصطناعي متكاملة للمطورين والمصممين</p>
 
