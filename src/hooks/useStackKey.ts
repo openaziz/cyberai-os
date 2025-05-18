@@ -1,34 +1,32 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { getStackKey } from "../services/api"
 
 export function useStackKey() {
-  const [key, setKey] = useState<string>("")
-  const [loading, setLoading] = useState<boolean>(true)
+  const [stackKey, setStackKey] = useState<string | null>(null)
+  const [projectId, setProjectId] = useState<string | null>(null)
+  const [loading, setLoading] = useState(true)
   const [error, setError] = useState<Error | null>(null)
 
   useEffect(() => {
-    async function fetchKey() {
+    async function fetchStackKey() {
       try {
         setLoading(true)
-        const response = await fetch("/api/stack-key")
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch stack key")
-        }
-
-        const data = await response.json()
-        setKey(data.key)
+        const data = await getStackKey()
+        setStackKey(data.key)
+        setProjectId(data.projectId)
+        setError(null)
       } catch (err) {
+        console.error("Error fetching Stack key:", err)
         setError(err instanceof Error ? err : new Error("Unknown error"))
-        console.error("Error fetching stack key:", err)
       } finally {
         setLoading(false)
       }
     }
 
-    fetchKey()
+    fetchStackKey()
   }, [])
 
-  return { key, loading, error }
+  return { stackKey, projectId, loading, error }
 }

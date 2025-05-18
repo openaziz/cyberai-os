@@ -1,7 +1,6 @@
 {
-  "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
-  "/ChatPage": "pages/ChatPage.js",
+  "/_app": "pages/_app.js",
   "/HomePage": "pages/HomePage.js",
   "/ModelTrainingPage": "pages/ModelTrainingPage.js",
   "/ModelsPage": "pages/ModelsPage.js",

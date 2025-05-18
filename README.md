@@ -3,10 +3,9 @@
   <h1>GangsterGPT</h1>
   <p>منصة ذكاء اصطناعي متكاملة للمطورين والمصممين</p>
   
-  ![GitHub stars](https://img.shields.io/github/stars/yourusername/gangstergpt?style=social)
-  ![GitHub forks](https://img.shields.io/github/forks/yourusername/gangstergpt?style=social)
-  ![GitHub issues](https://img.shields.io/github/issues/yourusername/gangstergpt)
-  ![GitHub license](https://img.shields.io/github/license/yourusername/gangstergpt)
+  ![GitHub stars](png-clipart-black-and-blue-wolf-illustration-wolf-avatar-splash-animals-thumbnail.png)
+  ![GitHub forks](png-clipart-gray-wolf-tattoo-watercolor-painting-drawing-abstract-wolf-blue-and-purple-wolf-painting-animals-carnivoran-thumbnail.png)
+
   
 </div>
 

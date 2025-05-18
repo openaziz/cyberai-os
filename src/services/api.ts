@@ -1,73 +1,37 @@
+// نسخة من الدوال في services/api.ts
 import { ENV } from "../config/env"
 
-// الإعدادات الافتراضية لطلبات API
-const defaultOptions = {
-  headers: {
-    "Content-Type": "application/json",
-  },
-}
-
 /**
- * دالة مساعدة لإجراء طلبات API
- */
-export async function fetchAPI<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
-  const url = endpoint.startsWith("http") ? endpoint : `${ENV.NEXT_PUBLIC_API_URL}${endpoint}`
-
-  const response = await fetch(url, {
-    ...defaultOptions,
-    ...options,
-    headers: {
-      ...defaultOptions.headers,
-      ...options.headers,
-    },
-  })
-
-  if (!response.ok) {
-    const error = await response.text()
-    throw new Error(error || `خطأ في الاتصال بالخادم: ${response.status}`)
-  }
-
-  // التحقق من نوع الاستجابة
-  const contentType = response.headers.get("content-type")
-  if (contentType && contentType.includes("application/json")) {
-    return response.json()
-  }
-
-  // إرجاع النص كما هو إذا لم تكن الاستجابة JSON
-  const text = await response.text()
-  try {
-    return JSON.parse(text) as T
-  } catch {
-    return text as unknown as T
-  }
-}
-
-/**
- * دالة للتعامل مع نماذج DeepSeek من search1api
+ * دالة للتعامل مع نماذج DeepSeek
  */
 export async function callDeepSeekModel(prompt: string, options: any = {}) {
   try {
-    const response = await fetch("https://api.search1api.com/v1/chat/completions", {
+    const apiUrl = "https://api.search1api.com/v1/chat/completions"
+    const headers = {
+      "Content-Type": "application/json",
+    }
+
+    const body = {
+      model: options.model || "deepseek-r1-70b-online",
+      messages: [
+        {
+          role: "system",
+          content: options.systemPrompt || "أنت مساعد ذكي ومفيد.",
+        },
+        {
+          role: "user",
+          content: prompt,
+        },
+      ],
+      temperature: options.temperature || 0.7,
+      max_tokens: options.maxTokens || 1024,
+      stream: options.stream || false,
+    }
+
+    const response = await fetch(apiUrl, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: options.model || "deepseek-r1-70b-online",
-        messages: [
-          {
-            role: "system",
-            content: options.systemPrompt || "أنت مساعد ذكي ومفيد.",
-          },
-          {
-            role: "user",
-            content: prompt,
-          },
-        ],
-        temperature: options.temperature || 0.7,
-        max_tokens: options.maxTokens || 1024,
-        stream: options.stream || false,
-      }),
+      headers,
+      body: JSON.stringify(body),
     })
 
     if (!response.ok) {
@@ -88,38 +52,90 @@ export async function callDeepSeekModel(prompt: string, options: any = {}) {
 }
 
 /**
+ * دالة للتعامل مع نماذج Together.xyz
+ */
+export async function callTogetherModel(prompt: string, options: any = {}) {
+  try {
+    const apiUrl = "https://api.together.xyz/v1/chat/completions"
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${process.env.TOGETHER_API_KEY || ""}`,
+    }
+
+    const body = {
+      model: options.model || "deepseek-ai/DeepSeek-R1-Distill-Llama-70B-free",
+      messages: [
+        {
+          role: "system",
+          content: options.systemPrompt || "أنت مساعد ذكي ومفيد.",
+        },
+        {
+          role: "user",
+          content: prompt,
+        },
+      ],
+      temperature: options.temperature || 0.7,
+      max_tokens: options.maxTokens || 1024,
+      stream: options.stream || false,
+    }
+
+    const response = await fetch(apiUrl, {
+      method: "POST",
+      headers,
+      body: JSON.stringify(body),
+    })
+
+    if (!response.ok) {
+      const error = await response.text()
+      throw new Error(error || `خطأ في الاتصال بـ Together API: ${response.status}`)
+    }
+
+    // إذا كان الاستجابة مجرى (stream)
+    if (options.stream) {
+      return handleStreamResponse(response, options.onChunk)
+    }
+
+    return response.json()
+  } catch (error) {
+    console.error("Error calling Together model:", error)
+    throw error
+  }
+}
+
+/**
  * دالة للتعامل مع نماذج OpenRouter
  */
 export async function callOpenRouterModel(prompt: string, options: any = {}) {
-  if (!ENV.OPENROUTER_API_KEY) {
-    throw new Error("مفتاح API لـ OpenRouter غير متوفر")
-  }
-
   try {
-    const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+    const apiUrl = "https://openrouter.ai/api/v1/chat/completions"
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${process.env.OPENROUTER_API_KEY || ""}`,
+      "HTTP-Referer": ENV.NEXT_PUBLIC_APP_URL || "https://cyberai-os.vercel.app",
+      "X-Title": "CyberAI OS",
+    }
+
+    const body = {
+      model: options.model || "openai/gpt-4o",
+      messages: [
+        {
+          role: "system",
+          content: options.systemPrompt || "أنت مساعد ذكي ومفيد.",
+        },
+        {
+          role: "user",
+          content: prompt,
+        },
+      ],
+      temperature: options.temperature || 0.7,
+      max_tokens: options.maxTokens || 1024,
+      stream: options.stream || false,
+    }
+
+    const response = await fetch(apiUrl, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${ENV.OPENROUTER_API_KEY}`,
-        "HTTP-Referer": ENV.NEXT_PUBLIC_APP_URL || "https://cyberai-os.vercel.app",
-        "X-Title": "CyberAI OS",
-      },
-      body: JSON.stringify({
-        model: options.model || "openai/gpt-4o",
-        messages: [
-          {
-            role: "system",
-            content: options.systemPrompt || "أنت مساعد ذكي ومفيد.",
-          },
-          {
-            role: "user",
-            content: prompt,
-          },
-        ],
-        temperature: options.temperature || 0.7,
-        max_tokens: options.maxTokens || 1024,
-        stream: options.stream || false,
-      }),
+      headers,
+      body: JSON.stringify(body),
     })
 
     if (!response.ok) {
@@ -135,56 +151,6 @@ export async function callOpenRouterModel(prompt: string, options: any = {}) {
     return response.json()
   } catch (error) {
     console.error("Error calling OpenRouter model:", error)
-    throw error
-  }
-}
-
-/**
- * دالة للتعامل مع نماذج Together.xyz
- */
-export async function callTogetherModel(prompt: string, options: any = {}) {
-  if (!ENV.TOGETHER_API_KEY) {
-    throw new Error("مفتاح API لـ Together.xyz غير متوفر")
-  }
-
-  try {
-    const response = await fetch("https://api.together.xyz/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${ENV.TOGETHER_API_KEY}`,
-      },
-      body: JSON.stringify({
-        model: options.model || "deepseek-ai/DeepSeek-R1-Distill-Llama-70B-free",
-        messages: [
-          {
-            role: "system",
-            content: options.systemPrompt || "أنت مساعد ذكي ومفيد.",
-          },
-          {
-            role: "user",
-            content: prompt,
-          },
-        ],
-        temperature: options.temperature || 0.7,
-        max_tokens: options.maxTokens || 1024,
-        stream: options.stream || false,
-      }),
-    })
-
-    if (!response.ok) {
-      const error = await response.text()
-      throw new Error(error || `خطأ في الاتصال بـ Together.xyz: ${response.status}`)
-    }
-
-    // إذا كان الاستجابة مجرى (stream)
-    if (options.stream) {
-      return handleStreamResponse(response, options.onChunk)
-    }
-
-    return response.json()
-  } catch (error) {
-    console.error("Error calling Together model:", error)
     throw error
   }
 }
@@ -248,44 +214,4 @@ async function handleStreamResponse(response: Response, onChunk?: (chunk: any) =
   }
 
   return result
-}
-
-/**
- * دالة للتعامل مع قاعدة بيانات Neon
- */
-export async function connectToNeonDB() {
-  if (!ENV.NEON_DATABASE_URL) {
-    throw new Error("معلومات الاتصال بقاعدة بيانات Neon غير متوفرة")
-  }
-
-  // هنا يمكن استخدام مكتبة مثل pg أو prisma للاتصال بقاعدة البيانات
-  console.log("جاري الاتصال بقاعدة بيانات Neon...")
-
-  // مثال على استخدام fetch للاتصال بـ API يتعامل مع قاعدة البيانات
-  return fetchAPI("/api/db/connect", {
-    method: "POST",
-    body: JSON.stringify({
-      connectionString: ENV.NEON_DATABASE_URL,
-    }),
-  })
-}
-
-/**
- * دالة للتعامل مع Redis
- */
-export async function connectToRedis() {
-  if (!ENV.KV_URL && !ENV.REDIS_URL) {
-    throw new Error("معلومات الاتصال بـ Redis غير متوفرة")
-  }
-
-  // هنا يمكن استخدام مكتبة مثل ioredis للاتصال بـ Redis
-  console.log("جاري الاتصال بـ Redis...")
-
-  // مثال على استخدام fetch للاتصال بـ API يتعامل مع Redis
-  return fetchAPI("/api/redis/connect", {
-    method: "POST",
-    body: JSON.stringify({
-      url: ENV.KV_URL || ENV.REDIS_URL,
-    }),
-  })
 }

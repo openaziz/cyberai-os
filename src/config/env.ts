@@ -1,3 +1,4 @@
+// نسخة من الملف config/env.ts
 // تكوين المتغيرات البيئية للتطبيق
 
 // استيراد المتغيرات البيئية من ملف .env أو من متغيرات البيئة
@@ -8,9 +9,8 @@ const getEnvVariable = (key: string, defaultValue = ""): string => {
   }
 
   // في بيئة التطوير، استخدم متغيرات Vite
-  const envKey = `VITE_${key}`
-  if (import.meta.env[envKey] !== undefined) {
-    return import.meta.env[envKey] as string
+  if (typeof window !== "undefined" && (window as any).ENV && (window as any).ENV[key] !== undefined) {
+    return (window as any).ENV[key] as string
   }
 
   return defaultValue
@@ -62,8 +62,9 @@ export const ENV = {
   ENCRYPT_LOCAL_DATA: getEnvVariable("ENCRYPT_LOCAL_DATA", "true") === "true",
 
   // إعدادات التطبيق
-  IS_PRODUCTION: import.meta.env.PROD,
-  BASE_URL: import.meta.env.BASE_URL || "/cyberai-os/",
+  IS_PRODUCTION: process.env.NODE_ENV === "production",
+  BASE_URL: process.env.NEXT_PUBLIC_APP_URL || "/",
+  APP_VERSION: process.env.APP_VERSION || "1.0.0",
 
   // إعدادات التدريب المحلي
   TRAINING_TEMP_DIR: getEnvVariable("TRAINING_TEMP_DIR", "./training_temp"),
@@ -78,7 +79,14 @@ export const ENV = {
 }
 
 // وظائف مساعدة للتحقق من توفر الخدمات
-export const isOpenRouterAvailable = (): boolean => Boolean(ENV.OPENROUTER_API_KEY)
-export const isTogetherAvailable = (): boolean => Boolean(ENV.TOGETHER_API_KEY)
-export const isNeonDatabaseAvailable = (): boolean => Boolean(ENV.NEON_DATABASE_URL)
-export const isRedisAvailable = (): boolean => Boolean(ENV.KV_URL || ENV.REDIS_URL)
+export const isOpenRouterAvailable = (): boolean => {
+  return process.env.OPENROUTER_API_KEY !== undefined && process.env.OPENROUTER_API_KEY !== ""
+}
+
+export const isTogetherAvailable = (): boolean => {
+  return process.env.TOGETHER_API_KEY !== undefined && process.env.TOGETHER_API_KEY !== ""
+}
+
+export const isGroqAvailable = () => {
+  return process.env.GROQ_API_KEY !== undefined && process.env.GROQ_API_KEY !== ""
+}
