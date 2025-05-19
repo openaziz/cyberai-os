@@ -1,103 +1,0 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>المحادثة - CyberAI OS</title>
-  <meta name="description" content="تحدث مع نماذج الذكاء الاصطناعي المتقدمة بدون الحاجة لمفاتيح API">
-  <link rel="stylesheet" href="assets/css/styles.css">
-  <link rel="icon" href="assets/images/favicon.ico">
-</head>
-<body class="dark-theme">
-  <header>
-    <div class="container">
-      <div class="logo">
-        <a href="https://openaziz.github.io/cyberai-os/">
-          <img src="assets/images/logo.svg" alt="CyberAI OS Logo">
-          <span>CyberAI OS</span>
-        </a>
-      </div>
-      <nav>
-        <ul>
-          <li><a href="index.html#features">المميزات</a></li>
-          <li><a href="index.html#models">النماذج</a></li>
-          <li><a href="terminal.html">الطرفية</a></li>
-          <li><a href="help.html">المساعدة</a></li>
-        </ul>
-      </nav>
-      <button class="theme-toggle">🌙</button>
-    </div>
-  </header>
-
-  <main>
-    <div class="container">
-      <div class="chat-container">
-        <div class="chat-header">
-          <div class="model-selector">
-            <select id="model-selector">
-              <option value="deepseek-r1-70b-online">DeepSeek R1 70B (No API Key)</option>
-              <option value="deepseek-ai/DeepSeek-R1-Distill-Llama-70B-free">DeepSeek R1 Distill (No API Key)</option>
-              <option value="llama3-70b-8192">Llama 3 70B (Groq API)</option>
-              <option value="openai/gpt-4o">GPT-4o (OpenRouter API)</option>
-            </select>
-          </div>
-          <div class="chat-actions">
-            <button id="clear-chat">مسح المحادثة</button>
-          </div>
-        </div>
-        <div class="chat-messages">
-          <!-- سيتم إضافة الرسائل هنا ديناميكيًا -->
-        </div>
-        <div class="chat-input">
-          <input type="text" placeholder="اكتب رسالتك هنا..." />
-          <button>إرسال</button>
-        </div>
-      </div>
-    </div>
-  </main>
-
-  <footer>
-    <div class="container">
-      <div class="footer-content">
-        <div class="footer-logo">
-          <img src="assets/images/logo.svg" alt="CyberAI OS Logo">
-          <span>CyberAI OS</span>
-        </div>
-        <div class="footer-links">
-          <div class="footer-column">
-            <h4>المنتج</h4>
-            <ul>
-              <li><a href="index.html#features">المميزات</a></li>
-              <li><a href="index.html#models">النماذج</a></li>
-              <li><a href="chat.html">المحادثة</a></li>
-              <li><a href="terminal.html">الطرفية</a></li>
-            </ul>
-          </div>
-          <div class="footer-column">
-            <h4>الدعم</h4>
-            <ul>
-              <li><a href="help.html">المساعدة</a></li>
-              <li><a href="setup.html">الإعداد</a></li>
-              <li><a href="https://github.com/openaziz/cyberai-os/issues">الإبلاغ عن مشكلة</a></li>
-            </ul>
-          </div>
-          <div class="footer-column">
-            <h4>المجتمع</h4>
-            <ul>
-              <li><a href="https://github.com/openaziz/cyberai-os">GitHub</a></li>
-              <li><a href="https://twitter.com/openaziz">Twitter</a></li>
-              <li><a href="https://discord.gg/cyberai">Discord</a></li>
-            </ul>
-          </div>
-        </div>
-      </div>
-      <div class="footer-bottom">
-        <p>© 2024 CyberAI OS. جميع الحقوق محفوظة.</p>
-      </div>
-    </div>
-  </footer>
-
-  <script src="assets/js/main.js"></script>
-  <script src="assets/js/chat.js"></script>
-</body>
-</html>

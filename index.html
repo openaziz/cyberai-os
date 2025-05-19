@@ -1,180 +1,0 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CyberAI OS - منصة ذكاء اصطناعي محلية بدون قيود</title>
-  <meta name="description" content="شغل نماذج الذكاء الاصطناعي على جهازك بخصوصية كاملة ودون الحاجة لمفاتيح API خارجية">
-  <link rel="stylesheet" href="assets/css/styles.css">
-  <link rel="icon" href="assets/images/favicon.ico">
-</head>
-<body class="dark-theme">
-  <header>
-    <div class="container">
-      <div class="logo">
-        <a href="https://openaziz.github.io/cyberai-os/">
-          <img src="assets/images/logo.svg" alt="CyberAI OS Logo">
-          <span>CyberAI OS</span>
-        </a>
-      </div>
-      <nav>
-        <ul>
-          <li><a href="#features">المميزات</a></li>
-          <li><a href="#models">النماذج</a></li>
-          <li><a href="terminal.html">الطرفية</a></li>
-          <li><a href="help.html">المساعدة</a></li>
-          <li><a href="chat.html" class="btn-primary">جرب المحادثة</a></li>
-        </ul>
-      </nav>
-      <button class="theme-toggle">🌙</button>
-    </div>
-  </header>
-
-  <main>
-    <section class="hero">
-      <div class="container">
-        <div class="hero-content">
-          <h1>تجربة ذكاء اصطناعي محلية بدون قيود</h1>
-          <p>شغل نماذج الذكاء الاصطناعي على جهازك بخصوصية كاملة ودون الحاجة لمفاتيح API خارجية</p>
-          <div class="cta-buttons">
-            <a href="chat.html" class="btn-primary">جرب المحادثة الآن</a>
-            <a href="#features" class="btn-secondary">تعرف على المزيد</a>
-          </div>
-        </div>
-        <div class="hero-image">
-          <img src="assets/images/hero-image.svg" alt="CyberAI OS Interface">
-        </div>
-      </div>
-    </section>
-
-    <section id="features" class="features">
-      <div class="container">
-        <h2>المميزات الرئيسية</h2>
-        <div class="features-grid">
-          <div class="feature-card">
-            <div class="feature-icon">🔒</div>
-            <h3>خصوصية كاملة</h3>
-            <p>تشغيل النماذج محلياً على جهازك دون إرسال بياناتك إلى خوادم خارجية</p>
-          </div>
-          <div class="feature-card">
-            <div class="feature-icon">🌐</div>
-            <h3>تشغيل بدون إنترنت</h3>
-            <p>استخدام الذكاء الاصطناعي حتى بدون اتصال بالإنترنت</p>
-          </div>
-          <div class="feature-card">
-            <div class="feature-icon">🧠</div>
-            <h3>نماذج متنوعة</h3>
-            <p>دعم لمجموعة واسعة من نماذج الذكاء الاصطناعي المحلية والسحابية</p>
-          </div>
-          <div class="feature-card">
-            <div class="feature-icon">⚡</div>
-            <h3>أداء متميز</h3>
-            <p>تحسين الأداء باستخدام وحدة معالجة الرسومات (GPU) وتقنيات التسريع المتقدمة</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="models" class="models">
-      <div class="container">
-        <h2>النماذج المدعومة</h2>
-        <div class="models-tabs">
-          <button class="tab-btn active" data-tab="local">نماذج محلية</button>
-          <button class="tab-btn" data-tab="cloud">نماذج سحابية</button>
-        </div>
-        <div class="tab-content active" id="local">
-          <div class="models-grid">
-            <div class="model-card">
-              <h3>TinyLlama (1.1B)</h3>
-              <p>نموذج خفيف مثالي للأجهزة منخفضة الموارد</p>
-              <span class="tag">CPU</span>
-            </div>
-            <div class="model-card">
-              <h3>Phi-2 (2.7B)</h3>
-              <p>نموذج صغير بأداء ممتاز من Microsoft</p>
-              <span class="tag">CPU/GPU</span>
-            </div>
-            <div class="model-card">
-              <h3>Mistral 7B</h3>
-              <p>نموذج متوسط الحجم بأداء متميز</p>
-              <span class="tag">GPU</span>
-            </div>
-            <div class="model-card">
-              <h3>Llama 2 (7B)</h3>
-              <p>نموذج متعدد الاستخدامات من Meta</p>
-              <span class="tag">GPU</span>
-            </div>
-          </div>
-        </div>
-        <div class="tab-content" id="cloud">
-          <div class="models-grid">
-            <div class="model-card">
-              <h3>DeepSeek R1 70B</h3>
-              <p>نموذج متقدم بدون الحاجة لمفتاح API</p>
-              <span class="tag">No API Key</span>
-            </div>
-            <div class="model-card">
-              <h3>GPT-4o</h3>
-              <p>أحدث نموذج من OpenAI</p>
-              <span class="tag">API Key</span>
-            </div>
-            <div class="model-card">
-              <h3>Claude 3</h3>
-              <p>نموذج متقدم من Anthropic</p>
-              <span class="tag">API Key</span>
-            </div>
-            <div class="model-card">
-              <h3>Gemini Pro</h3>
-              <p>نموذج متطور من Google</p>
-              <span class="tag">API Key</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer>
-    <div class="container">
-      <div class="footer-content">
-        <div class="footer-logo">
-          <img src="assets/images/logo.svg" alt="CyberAI OS Logo">
-          <span>CyberAI OS</span>
-        </div>
-        <div class="footer-links">
-          <div class="footer-column">
-            <h4>المنتج</h4>
-            <ul>
-              <li><a href="#features">المميزات</a></li>
-              <li><a href="#models">النماذج</a></li>
-              <li><a href="chat.html">المحادثة</a></li>
-              <li><a href="terminal.html">الطرفية</a></li>
-            </ul>
-          </div>
-          <div class="footer-column">
-            <h4>الدعم</h4>
-            <ul>
-              <li><a href="help.html">المساعدة</a></li>
-              <li><a href="setup.html">الإعداد</a></li>
-              <li><a href="https://github.com/openaziz/cyberai-os/issues">الإبلاغ عن مشكلة</a></li>
-            </ul>
-          </div>
-          <div class="footer-column">
-            <h4>المجتمع</h4>
-            <ul>
-              <li><a href="https://github.com/openaziz/cyberai-os">GitHub</a></li>
-              <li><a href="https://twitter.com/openaziz">Twitter</a></li>
-              <li><a href="https://discord.gg/cyberai">Discord</a></li>
-            </ul>
-          </div>
-        </div>
-      </div>
-      <div class="footer-bottom">
-        <p>© 2024 CyberAI OS. جميع الحقوق محفوظة.</p>
-      </div>
-    </div>
-  </footer>
-
-  <script src="assets/js/main.js"></script>
-</body>
-</html>

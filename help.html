@@ -1,202 +1,0 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>المساعدة - CyberAI OS</title>
-  <meta name="description" content="دليل المساعدة والأسئلة الشائعة حول CyberAI OS">
-  <link rel="stylesheet" href="assets/css/styles.css">
-  <link rel="icon" href="assets/images/favicon.ico">
-  <style>
-    .help-container {
-      max-width: 1000px;
-      margin: 100px auto 40px;
-      background-color: var(--card-background);
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-      padding: 30px;
-    }
-    
-    .help-section {
-      margin-bottom: 40px;
-    }
-    
-    .help-section h2 {
-      margin-bottom: 20px;
-      color: var(--primary-color);
-    }
-    
-    .faq-item {
-      margin-bottom: 20px;
-    }
-    
-    .faq-question {
-      font-weight: bold;
-      margin-bottom: 10px;
-      cursor: pointer;
-    }
-
-    .faq-answer {
-      padding-right: 20px;
-      border-right: 2px solid var(--primary-color);
-      margin-right: 10px;
-    }
-
-    .code-block {
-      background-color: #1a1a1a;
-      padding: 15px;
-      border-radius: 5px;
-      font-family: monospace;
-      overflow-x: auto;
-      margin: 15px 0;
-    }
-  </style>
-</head>
-<body class="dark-theme">
-  <header>
-    <div class="container">
-      <div class="logo">
-        <a href="https://openaziz.github.io/cyberai-os/">
-          <img src="assets/images/logo.svg" alt="CyberAI OS Logo">
-          <span>CyberAI OS</span>
-        </a>
-      </div>
-      <nav>
-        <ul>
-          <li><a href="index.html#features">المميزات</a></li>
-          <li><a href="index.html#models">النماذج</a></li>
-          <li><a href="chat.html">المحادثة</a></li>
-          <li><a href="terminal.html">الطرفية</a></li>
-        </ul>
-      </nav>
-      <button class="theme-toggle">🌙</button>
-    </div>
-  </header>
-
-  <main>
-    <div class="container">
-      <div class="help-container">
-        <h1>دليل المساعدة</h1>
-        
-        <div class="help-section">
-          <h2>البدء السريع</h2>
-          <p>مرحبًا بك في CyberAI OS! هذا الدليل سيساعدك على البدء باستخدام المنصة بسرعة وسهولة.</p>
-          
-          <h3>المتطلبات الأساسية</h3>
-          <ul>
-            <li>متصفح ويب حديث (Chrome، Firefox، Safari، Edge)</li>
-            <li>اتصال إنترنت للنماذج السحابية (اختياري للنماذج المحلية)</li>
-          </ul>
-          
-          <h3>الخطوات الأولى</h3>
-          <ol>
-            <li>استكشف <a href="chat.html">واجهة المحادثة</a> للتفاعل مع نماذج الذكاء الاصطناعي</li>
-            <li>جرب <a href="terminal.html">الطرفية</a> للتفاعل المباشر مع النماذج باستخدام الأوامر</li>
-            <li>استعرض <a href="index.html#models">النماذج المتاحة</a> واختر النموذج المناسب لاحتياجاتك</li>
-          </ol>
-        </div>
-        
-        <div class="help-section">
-          <h2>الأسئلة الشائعة</h2>
-          
-          <div class="faq-item">
-            <div class="faq-question">ما هو CyberAI OS؟</div>
-            <div class="faq-answer">
-              CyberAI OS هي منصة ذكاء اصطناعي مفتوحة المصدر تتيح لك تشغيل نماذج الذكاء الاصطناعي محلياً على جهازك بخصوصية كاملة، أو استخدام نماذج سحابية متقدمة عند الحاجة.
-            </div>
-          </div>
-          
-          <div class="faq-item">
-            <div class="faq-question">هل أحتاج إلى مفاتيح API لاستخدام النماذج؟</div>
-            <div class="faq-answer">
-              لا، يمكنك استخدام بعض النماذج مثل DeepSeek R1 70B و DeepSeek R1 Distill بدون الحاجة إلى مفاتيح API. ومع ذلك، للوصول إلى نماذج أخرى مثل GPT-4o أو Claude 3، ستحتاج إلى مفاتيح API الخاصة بها.
-            </div>
-          </div>
-          
-          <div class="faq-item">
-            <div class="faq-question">كيف يمكنني استخدام نموذج DeepSeek R1 70B بدون مفتاح API؟</div>
-            <div class="faq-answer">
-              يمكنك استخدام نموذج DeepSeek R1 70B مباشرة من خلال واجهة المحادثة أو الطرفية. هذا النموذج متاح عبر Search1API ولا يتطلب مفتاح API. يمكنك أيضًا استخدامه مباشرة عبر طلب API:
-              
-              <div class="code-block">
-curl -X POST 'https://api.search1api.com/v1/chat/completions' \
---header 'Content-Type: application/json' \
---data '{
-  "model": "deepseek-r1-70b-online",
-  "messages": [
-    {
-      "role": "user",
-      "content": "اشرح الحوسبة الكمية بلغة بسيطة"
-    }
-  ],
-  "stream": true
-}'
-              </div>
-            </div>
-          </div>
-          
-          <div class="faq-item">
-            <div class="faq-question">كيف يمكنني استخدام نموذج DeepSeek R1 Distill بدون مفتاح API؟</div>
-            <div class="faq-answer">
-              يمكنك استخدام نموذج DeepSeek R1 Distill مباشرة من خلال واجهة المحادثة أو الطرفية. هذا النموذج متاح عبر Together API ولا يتطلب مفتاح API. يمكنك أيضًا استخدامه مباشرة عبر طلب API:
-              
-              <div class="code-block">
-curl -X POST "https://api.together.xyz/v1/chat/completions" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "model": "deepseek-ai/DeepSeek-R1-Distill-Llama-70B-free",
-    "messages": [{"role": "user", "content": "ما هي بعض الأشياء الممتعة للقيام بها في نيويورك؟"}]
-  }'
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </main>
-
-  <footer>
-    <div class="container">
-      <div class="footer-content">
-        <div class="footer-logo">
-          <img src="assets/images/logo.svg" alt="CyberAI OS Logo">
-          <span>CyberAI OS</span>
-        </div>
-        <div class="footer-links">
-          <div class="footer-column">
-            <h4>المنتج</h4>
-            <ul>
-              <li><a href="index.html#features">المميزات</a></li>
-              <li><a href="index.html#models">النماذج</a></li>
-              <li><a href="chat.html">المحادثة</a></li>
-              <li><a href="terminal.html">الطرفية</a></li>
-            </ul>
-          </div>
-          <div class="footer-column">
-            <h4>الدعم</h4>
-            <ul>
-              <li><a href="help.html">المساعدة</a></li>
-              <li><a href="setup.html">الإعداد</a></li>
-              <li><a href="https://github.com/openaziz/cyberai-os/issues">الإبلاغ عن مشكلة</a></li>
-            </ul>
-          </div>
-          <div class="footer-column">
-            <h4>المجتمع</h4>
-            <ul>
-              <li><a href="https://github.com/openaziz/cyberai-os">GitHub</a></li>
-              <li><a href="https://twitter.com/openaziz">Twitter</a></li>
-              <li><a href="https://discord.gg/cyberai">Discord</a></li>
-            </ul>
-          </div>
-        </div>
-      </div>
-      <div class="footer-bottom">
-        <p>© 2024 CyberAI OS. جميع الحقوق محفوظة.</p>
-      </div>
-    </div>
-  </footer>
-
-  <script src="assets/js/main.js"></script>
-</body>
-</html>

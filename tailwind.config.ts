@@ -1,9 +1,23 @@
 import type { Config } from "tailwindcss"
 
-const config: Config = {
+const config = {
   darkMode: ["class"],
-  content: ["./app/**/*.{js,ts,jsx,tsx}", "./components/**/*.{js,ts,jsx,tsx}", "*.{js,ts,jsx,tsx,mdx}"],
+  content: [
+    "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
+    "*.{js,ts,jsx,tsx,mdx}",
+  ],
+  prefix: "",
   theme: {
+    container: {
+      center: true,
+      padding: "2rem",
+      screens: {
+        "2xl": "1400px",
+      },
+    },
     extend: {
       colors: {
         border: "hsl(var(--border))",
@@ -39,32 +53,11 @@ const config: Config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        "primary-dark": "hsl(var(--primary-dark))",
-        "primary-light": "hsl(var(--primary-light))",
-        "accent-dark": "hsl(var(--accent-dark))",
-        "accent-light": "hsl(var(--accent-light))",
-        gold: "hsl(var(--gold))",
-        "gold-dark": "hsl(var(--gold-dark))",
-        "gold-light": "hsl(var(--gold-light))",
-        "background-darker": "hsl(var(--background-darker))",
-        "background-light": "hsl(var(--background-light))",
-        "background-lighter": "hsl(var(--background-lighter))",
-        "dark-text": "hsl(var(--dark-text))",
-      },
-      fontFamily: {
-        cairo: ["Cairo", "Tajawal", "sans-serif"],
       },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
-      },
-      animation: {
-        "accordion-down": "accordion-down 0.2s ease-out",
-        "accordion-up": "accordion-up 0.2s ease-out",
-        fadeIn: "fadeIn 0.3s ease-in-out",
-        typing: "typing 1s ease-in-out infinite",
-        bounce: "bounce 1s infinite",
       },
       keyframes: {
         "accordion-down": {
@@ -75,22 +68,14 @@ const config: Config = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
-        fadeIn: {
-          from: { opacity: "0", transform: "translateY(10px)" },
-          to: { opacity: "1", transform: "translateY(0)" },
-        },
-        typing: {
-          "0%, 100%": { transform: "translateY(0)" },
-          "50%": { transform: "translateY(-5px)" },
-        },
-        bounce: {
-          "0%, 100%": { transform: "translateY(0)" },
-          "50%": { transform: "translateY(-25%)" },
-        },
+      },
+      animation: {
+        "accordion-down": "accordion-down 0.2s ease-out",
+        "accordion-up": "accordion-up 0.2s ease-out",
       },
     },
   },
   plugins: [require("tailwindcss-animate")],
-}
+} satisfies Config
 
 export default config

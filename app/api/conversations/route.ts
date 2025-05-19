@@ -1,34 +1,76 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { getConversations, saveConversation } from "@/utils/database"
+import { getUserConversations, saveConversation, deleteConversation } from "@/lib/upstash"
 
-export async function GET() {
+// الحصول على محادثات المستخدم
+export async function GET(request: NextRequest) {
   try {
-    const conversations = await getConversations()
-    return NextResponse.json({ conversations }, { status: 200 })
-  } catch (error) {
-    console.error("Error fetching conversations:", error)
-    return NextResponse.json({ error: "Failed to fetch conversations" }, { status: 500 })
+    const userId = request.nextUrl.searchParams.get("userId") || "anonymous"
+
+    const conversations = await getUserConversations(userId)
+
+    return new NextResponse(JSON.stringify({ conversations }), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    })
+  } catch (error: any) {
+    console.error("خطأ في استرجاع المحادثات:", error)
+    return new NextResponse(JSON.stringify({ error: error.message || "حدث خطأ أثناء استرجاع المحادثات" }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    })
   }
 }
 
+// حفظ محادثة جديدة أو تحديث محادثة موجودة
 export async function POST(request: NextRequest) {
   try {
-    const { title, messages, modelId } = await request.json()
+    const { userId = "anonymous", conversationId, data } = await request.json()
 
-    if (!title || !messages || !modelId) {
-      return NextResponse.json({ error: "Title, messages, and modelId are required" }, { status: 400 })
+    if (!conversationId || !data) {
+      return new NextResponse(JSON.stringify({ error: "يجب توفير معرف المحادثة والبيانات" }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      })
     }
 
-    const conversation = await saveConversation({
-      title,
-      messages,
-      modelId,
-      createdAt: new Date(),
-    })
+    await saveConversation(userId, conversationId, data)
 
-    return NextResponse.json({ conversation }, { status: 201 })
-  } catch (error) {
-    console.error("Error saving conversation:", error)
-    return NextResponse.json({ error: "Failed to save conversation" }, { status: 500 })
+    return new NextResponse(JSON.stringify({ success: true }), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    })
+  } catch (error: any) {
+    console.error("خطأ في حفظ المحادثة:", error)
+    return new NextResponse(JSON.stringify({ error: error.message || "حدث خطأ أثناء حفظ المحادثة" }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    })
+  }
+}
+
+// حذف محادثة
+export async function DELETE(request: NextRequest) {
+  try {
+    const { userId = "anonymous", conversationId } = await request.json()
+
+    if (!conversationId) {
+      return new NextResponse(JSON.stringify({ error: "يجب توفير معرف المحادثة" }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      })
+    }
+
+    await deleteConversation(userId, conversationId)
+
+    return new NextResponse(JSON.stringify({ success: true }), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    })
+  } catch (error: any) {
+    console.error("خطأ في حذف المحادثة:", error)
+    return new NextResponse(JSON.stringify({ error: error.message || "حدث خطأ أثناء حذف المحادثة" }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    })
   }
 }

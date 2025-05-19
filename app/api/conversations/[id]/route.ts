@@ -1,57 +1,58 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { getConversationById, updateConversation, deleteConversation } from "@/utils/database"
+import { getConversation, saveConversation } from "@/lib/upstash"
 
-export async function GET(request: Request, { params }: { params: { id: string } }) {
+// الحصول على محادثة محددة
+export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
   try {
+    const userId = request.nextUrl.searchParams.get("userId") || "anonymous"
     const conversationId = params.id
-    const conversation = await getConversationById(conversationId)
+
+    const conversation = await getConversation(userId, conversationId)
 
     if (!conversation) {
-      return NextResponse.json({ error: "Conversation not found" }, { status: 404 })
+      return new NextResponse(JSON.stringify({ error: "المحادثة غير موجودة" }), {
+        status: 404,
+        headers: { "Content-Type": "application/json" },
+      })
     }
 
-    return NextResponse.json({ conversation }, { status: 200 })
-  } catch (error) {
-    console.error(`Error fetching conversation ${params.id}:`, error)
-    return NextResponse.json({ error: "Failed to fetch conversation" }, { status: 500 })
+    return new NextResponse(JSON.stringify({ conversation }), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    })
+  } catch (error: any) {
+    console.error("خطأ في استرجاع المحادثة:", error)
+    return new NextResponse(JSON.stringify({ error: error.message || "حدث خطأ أثناء استرجاع المحادثة" }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    })
   }
 }
 
+// تحديث محادثة محددة
 export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
   try {
+    const { userId = "anonymous", data } = await request.json()
     const conversationId = params.id
-    const { title, messages, modelId } = await request.json()
 
-    const updatedConversation = await updateConversation(conversationId, {
-      title,
-      messages,
-      modelId,
-      updatedAt: new Date(),
+    if (!data) {
+      return new NextResponse(JSON.stringify({ error: "يجب توفير بيانات المحادثة" }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      })
+    }
+
+    await saveConversation(userId, conversationId, data)
+
+    return new NextResponse(JSON.stringify({ success: true }), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
     })
-
-    if (!updatedConversation) {
-      return NextResponse.json({ error: "Conversation not found" }, { status: 404 })
-    }
-
-    return NextResponse.json({ conversation: updatedConversation }, { status: 200 })
-  } catch (error) {
-    console.error(`Error updating conversation ${params.id}:`, error)
-    return NextResponse.json({ error: "Failed to update conversation" }, { status: 500 })
-  }
-}
-
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
-  try {
-    const conversationId = params.id
-    const success = await deleteConversation(conversationId)
-
-    if (!success) {
-      return NextResponse.json({ error: "Conversation not found" }, { status: 404 })
-    }
-
-    return NextResponse.json({ success: true }, { status: 200 })
-  } catch (error) {
-    console.error(`Error deleting conversation ${params.id}:`, error)
-    return NextResponse.json({ error: "Failed to delete conversation" }, { status: 500 })
+  } catch (error: any) {
+    console.error("خطأ في تحديث المحادثة:", error)
+    return new NextResponse(JSON.stringify({ error: error.message || "حدث خطأ أثناء تحديث المحادثة" }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    })
   }
 }

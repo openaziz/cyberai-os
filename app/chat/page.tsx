@@ -1,202 +1,442 @@
 "use client"
 
-import { useState } from "react"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Card } from "@/components/ui/card"
+import type React from "react"
+
+import { useState, useRef, useEffect } from "react"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { Bot, Send, User, ImageIcon, Paperclip, Trash, AlertCircle } from "lucide-react"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Settings, Plus, MessageSquare, History, Trash2 } from "lucide-react"
-import { ENV } from "@/config/env"
-import ChatComponent from "@/components/ChatComponent"
+import { useToast } from "@/components/ui/use-toast"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { cn } from "@/lib/utils"
 
-export default function ChatPage() {
-  const [activeTab, setActiveTab] = useState("new-chat")
-  const [selectedModel, setSelectedModel] = useState("deepseek-r1-70b")
+// استخدام uuid لإنشاء معرفات فريدة
+function generateId() {
+  return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
+}
+
+type Message = {
+  id: string
+  role: "user" | "assistant" | "system" | "error"
+  content: string
+  timestamp: number
+}
+
+type Conversation = {
+  id: string
+  title: string
+  messages: Message[]
+  model: string
+  createdAt: number
+  updatedAt: number
+}
+
+// استرجاع النماذج المتاحة من API
+const initialModels = [
+  { id: "groq-llama3", name: "Llama-3-70B (Groq)", provider: "groq", working: true },
+  { id: "deepseek", name: "DeepSeek-R1", provider: "together", working: false },
+  { id: "llama4", name: "Llama-4-Maverick-17B", provider: "together", working: false },
+  { id: "gemma3", name: "Gemma-3-27B", provider: "together", working: false },
+]
+
+const ChatPage = () => {
+  const { toast } = useToast()
+  const [conversations, setConversations] = useState<Conversation[]>([])
+  const [currentConversation, setCurrentConversation] = useState<Conversation | null>(null)
+  const [input, setInput] = useState("")
+  const [isLoading, setIsLoading] = useState(false)
+  const [availableModels, setAvailableModels] = useState(initialModels)
+  const [selectedModel, setSelectedModel] = useState("groq-llama3") // تعيين Groq كنموذج افتراضي
+  const [error, setError] = useState<string | null>(null)
+  const messagesEndRef = useRef<HTMLDivElement>(null)
+
+  // استرجاع النماذج من API عند تحميل الصفحة
+  useEffect(() => {
+    const fetchModels = async () => {
+      try {
+        const response = await fetch("/api/models")
+        if (response.ok) {
+          const data = await response.json()
+          // تحديد النماذج العاملة
+          const models = data.models.map((model: any) => ({
+            id: model.id,
+            name: model.name,
+            provider: model.provider,
+            working: model.provider === "groq" || model.type === "local",
+            type: model.type,
+          }))
+          setAvailableModels(models)
+        }
+      } catch (error) {
+        console.error("خطأ في جلب النماذج:", error)
+      }
+    }
+
+    fetchModels()
+  }, [])
+
+  // إنشاء محادثة جديدة عند تحميل الصفحة إذا لم تكن هناك محادثات
+  useEffect(() => {
+    if (conversations.length === 0) {
+      const newConversation: Conversation = {
+        id: generateId(),
+        title: "محادثة جديدة",
+        messages: [],
+        model: selectedModel,
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+      }
+      setConversations([newConversation])
+      setCurrentConversation(newConversation)
+    }
+  }, [conversations, selectedModel])
+
+  // التمرير إلى آخر رسالة
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+  }, [currentConversation?.messages])
+
+  const handleSendMessage = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!input.trim() || !currentConversation || isLoading) return
+
+    setError(null)
+
+    // إضافة رسالة المستخدم
+    const userMessage: Message = {
+      id: generateId(),
+      role: "user",
+      content: input,
+      timestamp: Date.now(),
+    }
+
+    const updatedMessages = [...currentConversation.messages, userMessage]
+    const updatedConversation = {
+      ...currentConversation,
+      messages: updatedMessages,
+      updatedAt: Date.now(),
+    }
+
+    setCurrentConversation(updatedConversation)
+    setInput("")
+    setIsLoading(true)
+
+    // تحديد ما إذا كان النموذج محلياً أم لا
+    const selectedModelInfo = availableModels.find((m) => m.id === selectedModel)
+    const isLocalModel = selectedModelInfo?.type === "local"
+
+    // تحديد عنوان API المناسب
+    const apiEndpoint = isLocalModel ? "/api/chat/local" : "/api/chat"
+
+    try {
+      // إرسال الرسالة إلى API
+      const response = await fetch(apiEndpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          messages: updatedMessages
+            .filter((msg) => msg.role !== "error") // استبعاد رسائل الخطأ
+            .map((msg) => ({
+              role: msg.role,
+              content: msg.content,
+            })),
+          model: selectedModel,
+        }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || `خطأ في الاستجابة: ${response.status}`)
+      }
+
+      // إضافة رسالة المساعد
+      const assistantMessage: Message = {
+        id: generateId(),
+        role: "assistant",
+        content: data.choices[0].message.content,
+        timestamp: Date.now(),
+      }
+
+      const finalMessages = [...updatedMessages, assistantMessage]
+      const finalConversation = {
+        ...updatedConversation,
+        messages: finalMessages,
+        updatedAt: Date.now(),
+      }
+
+      setCurrentConversation(finalConversation)
+
+      // تحديث قائمة المحادثات
+      setConversations((prev) => prev.map((conv) => (conv.id === finalConversation.id ? finalConversation : conv)))
+
+      // محاولة حفظ المحادثة في قاعدة البيانات
+      try {
+        await saveConversation(finalConversation)
+      } catch (saveError) {
+        console.error("خطأ في حفظ المحادثة:", saveError)
+        // لا نريد إظهار خطأ للمستخدم هنا لأن المحادثة نجحت بالفعل
+      }
+    } catch (error: any) {
+      console.error("خطأ في إرسال الرسالة:", error)
+
+      // إضافة رسالة خطأ إلى المحادثة
+      const errorMessage: Message = {
+        id: generateId(),
+        role: "error",
+        content: `حدث خطأ أثناء معالجة الرسالة: ${error.message}`,
+        timestamp: Date.now(),
+      }
+
+      const finalMessages = [...updatedMessages, errorMessage]
+      const finalConversation = {
+        ...updatedConversation,
+        messages: finalMessages,
+        updatedAt: Date.now(),
+      }
+
+      setCurrentConversation(finalConversation)
+      setConversations((prev) => prev.map((conv) => (conv.id === finalConversation.id ? finalConversation : conv)))
+
+      setError(error.message)
+
+      // إذا كان الخطأ متعلقاً بنموذج Together، نقترح استخدام Groq
+      if (selectedModel !== "groq-llama3" && error.message.includes("API key")) {
+        toast({
+          title: "خطأ في النموذج المحدد",
+          description: "يبدو أن هناك مشكلة مع النموذج المحدد. جرب استخدام نموذج Llama-3-70B (Groq) بدلاً من ذلك.",
+          variant: "destructive",
+          action: (
+            <Button variant="outline" onClick={() => setSelectedModel("groq-llama3")}>
+              تبديل إلى Groq
+            </Button>
+          ),
+        })
+      } else {
+        toast({
+          title: "خطأ",
+          description: "حدث خطأ أثناء معالجة الرسالة. يرجى المحاولة مرة أخرى.",
+          variant: "destructive",
+        })
+      }
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const saveConversation = async (conversation: Conversation) => {
+    try {
+      // محاكاة حفظ المحادثة - يمكن تفعيل هذا لاحقاً عند توفر API
+      console.log("حفظ المحادثة:", conversation.id)
+      // في الإصدار الحقيقي، سنقوم بإرسال طلب إلى API
+      /*
+      await fetch("/api/conversations", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: "anonymous", // يمكن تغييره لاحقاً عند إضافة نظام المستخدمين
+          conversationId: conversation.id,
+          data: conversation,
+        }),
+      })
+      */
+    } catch (error) {
+      console.error("خطأ في حفظ المحادثة:", error)
+      throw error
+    }
+  }
+
+  const handleNewConversation = () => {
+    const newConversation: Conversation = {
+      id: generateId(),
+      title: "محادثة جديدة",
+      messages: [],
+      model: selectedModel,
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+    }
+    setConversations([...conversations, newConversation])
+    setCurrentConversation(newConversation)
+    setError(null)
+  }
+
+  const handleClearConversation = () => {
+    if (!currentConversation) return
+
+    const clearedConversation = {
+      ...currentConversation,
+      messages: [],
+      updatedAt: Date.now(),
+    }
+
+    setCurrentConversation(clearedConversation)
+    setConversations((prev) => prev.map((conv) => (conv.id === clearedConversation.id ? clearedConversation : conv)))
+    setError(null)
+  }
 
   return (
-    <div className="chat-page py-8 px-4">
-      <div className="container mx-auto max-w-6xl">
-        <div className="page-header mb-8 text-center">
-          <div className="flex justify-center mb-4">
-            <img
-              src={`${ENV.BASE_URL}assets/logo-wolf-cosmic.png`}
-              alt="CyberAI OS Logo"
-              className="w-16 h-16 object-contain"
-            />
-          </div>
-          <h1 className="text-4xl font-bold mb-4">الدردشة الذكية</h1>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            تفاعل مع نماذج الذكاء الاصطناعي المختلفة واحصل على إجابات لأسئلتك
-          </p>
-        </div>
-
-        <div className="chat-interface flex flex-col lg:flex-row gap-6">
-          <div className="chat-sidebar w-full lg:w-64 flex-shrink-0">
-            <Card className="h-full">
-              <div className="p-4 border-b border-background-lighter">
-                <button className="bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-md transition-colors w-full flex items-center justify-center gap-2">
-                  <Plus className="h-4 w-4" />
-                  محادثة جديدة
-                </button>
-              </div>
-
-              <div className="p-4 border-b border-background-lighter">
-                <h3 className="font-medium mb-3 flex items-center gap-2">
-                  <Settings className="h-4 w-4 text-muted-foreground" />
-                  إعدادات النموذج
-                </h3>
-                <div className="space-y-3">
-                  <div>
-                    <label className="text-sm text-muted-foreground block mb-1">النموذج</label>
-                    <Select value={selectedModel} onValueChange={setSelectedModel}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="اختر النموذج" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="deepseek-r1-70b">DeepSeek-R1-70B</SelectItem>
-                        <SelectItem value="gpt-4o">GPT-4o</SelectItem>
-                        <SelectItem value="mistral-7b">Mistral 7B (محلي)</SelectItem>
-                        <SelectItem value="llama2-7b">Llama 2 7B (محلي)</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div>
-                    <label className="text-sm text-muted-foreground block mb-1">درجة الحرارة</label>
-                    <input type="range" min="0" max="1" step="0.1" defaultValue="0.7" className="w-full" />
-                    <div className="flex justify-between text-xs text-muted-foreground">
-                      <span>دقيق</span>
-                      <span>متوازن</span>
-                      <span>إبداعي</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="p-4">
-                <h3 className="font-medium mb-3 flex items-center gap-2">
-                  <History className="h-4 w-4 text-muted-foreground" />
-                  المحادثات السابقة
-                </h3>
-                <div className="space-y-2">
-                  <ChatHistoryItem title="استفسار عن النماذج المحلية" date="منذ 3 ساعات" active={false} />
-                  <ChatHistoryItem title="مساعدة في تثبيت النظام" date="منذ يومين" active={false} />
-                  <ChatHistoryItem title="أسئلة عن التدريب المخصص" date="منذ 5 أيام" active={false} />
-                </div>
-              </div>
-            </Card>
-          </div>
-
-          <div className="chat-main flex-1">
-            <Card className="h-full">
-              <Tabs
-                defaultValue="new-chat"
-                value={activeTab}
-                onValueChange={setActiveTab}
-                className="h-full flex flex-col"
+    <div className="flex h-screen overflow-hidden">
+      {/* الشريط الجانبي للمحادثات */}
+      <div className="w-64 bg-card border-l border-border overflow-y-auto hidden md:block">
+        <div className="p-4">
+          <Button onClick={handleNewConversation} className="w-full mb-4">
+            محادثة جديدة
+          </Button>
+          <div className="space-y-2">
+            {conversations.map((conv) => (
+              <Button
+                key={conv.id}
+                variant={currentConversation?.id === conv.id ? "secondary" : "ghost"}
+                className="w-full justify-start text-right"
+                onClick={() => setCurrentConversation(conv)}
               >
-                <div className="border-b border-background-lighter p-2">
-                  <TabsList className="grid grid-cols-2">
-                    <TabsTrigger value="new-chat" className="flex items-center gap-2">
-                      <MessageSquare className="h-4 w-4" />
-                      <span>محادثة جديدة</span>
-                    </TabsTrigger>
-                    <TabsTrigger value="chat-history" className="flex items-center gap-2">
-                      <History className="h-4 w-4" />
-                      <span>سجل المحادثات</span>
-                    </TabsTrigger>
-                  </TabsList>
-                </div>
-
-                <TabsContent value="new-chat" className="flex-1 flex flex-col">
-                  <div className="model-info p-3 bg-background-lighter text-sm flex justify-between items-center">
-                    <div className="flex items-center gap-2">
-                      <span className="font-medium">النموذج الحالي:</span>
-                      <span className="text-red-600 dark:text-red-500">
-                        {selectedModel === "deepseek-r1-70b" && "DeepSeek-R1-70B"}
-                        {selectedModel === "gpt-4o" && "GPT-4o"}
-                        {selectedModel === "mistral-7b" && "Mistral 7B (محلي)"}
-                        {selectedModel === "llama2-7b" && "Llama 2 7B (محلي)"}
-                      </span>
-                    </div>
-                    <button className="text-muted-foreground hover:text-foreground transition-colors">
-                      <Trash2 className="h-4 w-4" />
-                    </button>
-                  </div>
-
-                  <div className="flex-1">
-                    <ChatComponent />
-                  </div>
-                </TabsContent>
-
-                <TabsContent value="chat-history" className="p-4">
-                  <h3 className="text-xl font-bold mb-4">سجل المحادثات</h3>
-                  <div className="space-y-4">
-                    <ChatHistoryCard
-                      title="استفسار عن النماذج المحلية"
-                      date="2023-05-18 14:30"
-                      model="DeepSeek-R1-70B"
-                      preview="ما هي النماذج المحلية المدعومة في CyberAI OS؟"
-                    />
-                    <ChatHistoryCard
-                      title="مساعدة في تثبيت النظام"
-                      date="2023-05-16 09:15"
-                      model="GPT-4o"
-                      preview="كيف يمكنني تثبيت CyberAI OS على نظام Linux؟"
-                    />
-                    <ChatHistoryCard
-                      title="أسئلة عن التدريب المخصص"
-                      date="2023-05-13 16:45"
-                      model="Mistral 7B"
-                      preview="هل يمكنني تدريب نموذج مخصص باستخدام بياناتي الخاصة؟"
-                    />
-                  </div>
-                </TabsContent>
-              </Tabs>
-            </Card>
+                <span className="truncate">{conv.title}</span>
+              </Button>
+            ))}
           </div>
         </div>
       </div>
-    </div>
-  )
-}
 
-function ChatHistoryItem({ title, date, active }: { title: string; date: string; active: boolean }) {
-  return (
-    <div
-      className={`chat-history-item p-2 rounded-md cursor-pointer transition-colors ${
-        active ? "bg-red-600 text-white" : "hover:bg-background-lighter"
-      }`}
-    >
-      <div className="font-medium truncate">{title}</div>
-      <div className={`text-xs ${active ? "text-red-200" : "text-muted-foreground"}`}>{date}</div>
-    </div>
-  )
-}
+      {/* منطقة المحادثة الرئيسية */}
+      <div className="flex-1 flex flex-col h-full overflow-hidden">
+        {/* رأس المحادثة */}
+        <div className="bg-card border-b border-border p-4 flex justify-between items-center">
+          <div className="flex items-center gap-2">
+            <Select value={selectedModel} onValueChange={setSelectedModel}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="اختر النموذج" />
+              </SelectTrigger>
+              <SelectContent>
+                {availableModels.map((model) => (
+                  <SelectItem key={model.id} value={model.id} disabled={!model.working && model.id !== "groq-llama3"}>
+                    <div className="flex items-center gap-2">
+                      <span>{model.name}</span>
+                      {!model.working && model.id !== "groq-llama3" && (
+                        <span className="text-xs text-red-500">(غير متاح)</span>
+                      )}
+                    </div>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <Button variant="ghost" size="icon" onClick={handleClearConversation} title="مسح المحادثة">
+            <Trash className="h-5 w-5" />
+          </Button>
+        </div>
 
-function ChatHistoryCard({
-  title,
-  date,
-  model,
-  preview,
-}: { title: string; date: string; model: string; preview: string }) {
-  return (
-    <Card className="p-4 hover:bg-background-lighter transition-colors cursor-pointer">
-      <div className="flex justify-between items-start mb-2">
-        <h4 className="font-medium">{title}</h4>
-        <div className="text-xs text-muted-foreground">{date}</div>
-      </div>
-      <p className="text-sm text-muted-foreground mb-2 truncate">{preview}</p>
-      <div className="flex justify-between items-center">
-        <span className="text-xs bg-background-lighter px-2 py-1 rounded-full">{model}</span>
-        <div className="flex gap-2">
-          <button className="text-muted-foreground hover:text-foreground transition-colors">
-            <MessageSquare className="h-4 w-4" />
-          </button>
-          <button className="text-muted-foreground hover:text-red-600 transition-colors">
-            <Trash2 className="h-4 w-4" />
-          </button>
+        {/* منطقة الرسائل */}
+        <div className="flex-1 overflow-y-auto p-4 space-y-4">
+          {error && (
+            <Alert variant="destructive" className="mb-4">
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle>خطأ</AlertTitle>
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
+
+          {selectedModel !== "groq-llama3" && (
+            <Alert variant="warning" className="mb-4">
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle>تنبيه</AlertTitle>
+              <AlertDescription>
+                النماذج من Together AI غير متاحة حالياً بسبب مشكلة في مفتاح API. يرجى استخدام نموذج Llama-3-70B (Groq).
+                <Button variant="outline" size="sm" className="mt-2" onClick={() => setSelectedModel("groq-llama3")}>
+                  تبديل إلى Groq
+                </Button>
+              </AlertDescription>
+            </Alert>
+          )}
+
+          {currentConversation?.messages.length === 0 ? (
+            <div className="h-full flex flex-col items-center justify-center text-center p-8">
+              <Bot className="h-16 w-16 text-muted-foreground mb-4" />
+              <h3 className="text-2xl font-bold mb-2">مرحباً بك في CyberAI OS</h3>
+              <p className="text-muted-foreground max-w-md">
+                ابدأ محادثة مع نماذج الذكاء الاصطناعي المتقدمة. يمكنك طرح أسئلة، طلب معلومات، أو الحصول على مساعدة في
+                مختلف المجالات.
+              </p>
+            </div>
+          ) : (
+            currentConversation?.messages.map((message) => (
+              <div key={message.id} className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}>
+                <div className="flex items-start gap-3 max-w-3xl">
+                  {message.role === "assistant" && (
+                    <Avatar className="mt-1">
+                      <AvatarFallback className="bg-primary text-primary-foreground">
+                        <Bot className="h-4 w-4" />
+                      </AvatarFallback>
+                    </Avatar>
+                  )}
+                  {message.role === "error" && (
+                    <Avatar className="mt-1">
+                      <AvatarFallback className="bg-destructive text-destructive-foreground">
+                        <AlertCircle className="h-4 w-4" />
+                      </AvatarFallback>
+                    </Avatar>
+                  )}
+                  <Card
+                    className={cn(
+                      "mb-2",
+                      message.role === "user"
+                        ? "bg-primary/10 border-primary/20"
+                        : message.role === "error"
+                          ? "bg-destructive/10 border-destructive/20"
+                          : "bg-card",
+                    )}
+                  >
+                    <CardContent className="p-3 text-sm">
+                      <div className="whitespace-pre-wrap">{message.content}</div>
+                      <div className="text-xs text-muted-foreground mt-2 text-left">
+                        {new Date(message.timestamp).toLocaleTimeString()}
+                      </div>
+                    </CardContent>
+                  </Card>
+                  {message.role === "user" && (
+                    <Avatar className="mt-1">
+                      <AvatarFallback className="bg-secondary">
+                        <User className="h-4 w-4" />
+                      </AvatarFallback>
+                    </Avatar>
+                  )}
+                </div>
+              </div>
+            ))
+          )}
+          <div ref={messagesEndRef} />
+        </div>
+
+        {/* نموذج الإدخال */}
+        <div className="p-4 border-t border-border bg-card">
+          <form onSubmit={handleSendMessage} className="flex gap-2">
+            <Button type="button" variant="ghost" size="icon" title="إرفاق صورة">
+              <ImageIcon className="h-5 w-5" />
+            </Button>
+            <Button type="button" variant="ghost" size="icon" title="إرفاق ملف">
+              <Paperclip className="h-5 w-5" />
+            </Button>
+            <Input
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder="اكتب رسالتك هنا..."
+              className="flex-1"
+              disabled={isLoading}
+            />
+            <Button type="submit" size="icon" disabled={!input.trim() || isLoading}>
+              <Send className="h-5 w-5" />
+            </Button>
+          </form>
         </div>
       </div>
-    </Card>
+    </div>
   )
 }
+
+export default ChatPage
