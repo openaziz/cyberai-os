@@ -1,7 +1,7 @@
 # CyberAI OS
 
 <div align="center">
-  <img src="public/cyberai-logo.png" alt="CyberAI OS Logo" width="200" />
+  <img src="تنزيل.jpeg" alt="CyberAI OS Logo" width="200" />
   <h3>نظام ذكاء اصطناعي محلي مع الحفاظ على الخصوصية</h3>
 </div>
 
@@ -105,7 +105,7 @@ npm run dev
 
 - البريد الإلكتروني: sa6aa6116@gmail.com
 - GitHub: https://github.com/openaziz/cyberai-os
-- الموقع: https://openaziz.github.io/cyberai-os/
+- الموقع: https://cyberai-os-twfm-hfbbqltjf-hoor83850-gmailcoms-projects.vercel.app
 \`\`\`
 
 ## 4. ملف تعريف للصفحة الرئيسية في GitHub Pages
