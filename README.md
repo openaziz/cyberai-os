@@ -1,7 +1,7 @@
 # CyberAI OS
 
 <div align="center">
-  <img src="istockphoto-1440174785-612x612.jpg" alt="CyberAI OS Logo" width="200" />
+  <img src="<a href='https://ar.pngtree.com/freepng/grim-reaper-scythe-ribbon-tattoo_14672090.html'>صورة PNG من ar.pngtree.com/</a>" alt="CyberAI OS Logo" width="200" />
   <h3>نظام ذكاء اصطناعي محلي مع الحفاظ على الخصوصية</h3>
 </div>
 
