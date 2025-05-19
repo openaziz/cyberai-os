@@ -1,7 +1,7 @@
 # CyberAI OS
 
 <div align="center">
-  <img src="تنزيل.jpeg" alt="CyberAI OS Logo" width="200" />
+  <img src="https://www.google.com/imgres?q=%D8%B0%D8%A6%D8%A8%20%D9%84%D9%88%D8%AC%D9%88&imgurl=https%3A%2F%2Fpng.pngtree.com%2Fpng-vector%2F20200922%2Fourmid%2Fpngtree-red-wolf-logo-for-game-team-png-image_2349571.jpg&imgrefurl=https%3A%2F%2Far.pngtree.com%2Ffree-png-vectors%2Fwolf-logo&docid=0cMNKsCSRe5YlM&tbnid=ACmfR5XhkAibhM&vet=12ahUKEwjIw86Q766NAxXYWaQEHaQjNf0QM3oECBsQAA..i&w=360&h=360&hcb=2&ved=2ahUKEwjIw86Q766NAxXYWaQEHaQjNf0QM3oECBsQAA" alt="CyberAI OS Logo" width="200" />
   <h3>نظام ذكاء اصطناعي محلي مع الحفاظ على الخصوصية</h3>
 </div>
 
